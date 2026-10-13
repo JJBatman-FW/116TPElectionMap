@@ -266,6 +266,116 @@
             margin: 8px 0;
         }
 
+        /* 真實瀑布圖樣式 (絕對定位完美對齊版) */
+        .waterfall-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            gap: 12px;
+        }
+
+        .wf-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48%;
+        }
+
+        .wf-party-label {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid;
+            padding-bottom: 3px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* 🌟 新增：數據看板樣式 */
+        .wf-data-board {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            gap: 2px;
+            margin-bottom: 12px;
+        }
+
+        .wf-data-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 4px 1px;
+            border: 1px solid #eee;
+        }
+
+        .wf-data-lbl {
+            font-size: 10px;
+            color: #777;
+            margin-bottom: 1px;
+        }
+
+        .wf-data-val {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 變化量高亮突顯 (強調重點) */
+        .wf-data-item.highlight-green {
+            background-color: #E8F5E9;
+            border-color: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        .wf-data-item.highlight-blue {
+            background-color: #E3F2FD;
+            border-color: #BBDEFB;
+            color: #1565C0;
+        }
+
+        /* 圖表區域 (純圖，高度略縮至100px更緊湊) */
+        .wf-bars {
+            display: flex;
+            align-items: flex-end;
+            height: 100px;
+            border-bottom: 2px solid #ccc;
+            width: 100%;
+            justify-content: space-around;
+            padding-bottom: 1px;
+        }
+
+        .wf-col {
+            display: block;
+            position: relative;
+            height: 100%;
+            width: 28%;
+        }
+
+        .wf-bar {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            border-radius: 2px;
+            transition: all 0.5s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .wf-label {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .change-box {
+            padding-bottom: 30px;
+        }
+
         /* ================= RWD 響應式設計 (800px 以下) ================= */
         @media (max-width: 800px) {
             .dashboard {
@@ -373,9 +483,70 @@
                     <div class="bar-fill bg-blue" id="info-blue-bar" style="width: 0%"></div>
                 </div>
             </div>
+            <!-- 得票率變化：真實瀑布圖 (Waterfall Chart) -->
             <div class="change-box">
-                <div class="change-item text-green">綠營得票率變化: <span id="info-green-change">-</span></div>
-                <div class="change-item text-blue">藍營得票率變化: <span id="info-blue-change">-</span></div>
+                <div style="font-weight: bold; margin-bottom: 12px; font-size: 15px; text-align: center; color: #555;">
+                    得票率變化分析</div>
+
+                <div class="waterfall-box">
+                    <!-- ================= 🟢 綠營 ================= -->
+                    <div class="wf-group text-green">
+                        <div class="wf-party-label" style="border-bottom-color: #2E7D32;">綠營</div>
+                        <!-- 🌟 頂部數據看板：數據在這裡平鋪，絕對不重疊 -->
+                        <div class="wf-data-board">
+                            <div class="wf-data-item"><span class="wf-data-lbl">上屆</span><span class="wf-data-val"
+                                    id="wf-g-prev-val">-</span></div>
+                            <div class="wf-data-item highlight-green"><span class="wf-data-lbl">變化</span><span
+                                    class="wf-data-val" id="wf-g-change-val">-</span></div>
+                            <div class="wf-data-item"><span class="wf-data-lbl">本屆</span><span class="wf-data-val"
+                                    id="wf-g-curr-val">-</span></div>
+                        </div>
+                        <!-- 底部純圖 -->
+                        <div class="wf-bars">
+                            <div class="wf-col">
+                                <div class="wf-bar bg-gray" id="wf-g-prev-bar"></div>
+                                <div class="wf-label">上屆</div>
+                            </div>
+                            <div class="wf-col">
+                                <div class="wf-bar bg-green" id="wf-g-change-bar"></div>
+                                <div class="wf-label">變化</div>
+                            </div>
+                            <div class="wf-col">
+                                <div class="wf-bar bg-green" id="wf-g-curr-bar"></div>
+                                <div class="wf-label">本屆</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= 🔵 藍營 ================= -->
+                    <div class="wf-group text-blue">
+                        <div class="wf-party-label" style="border-bottom-color: #1565C0;">藍營</div>
+                        <!-- 🌟 頂部數據看板 -->
+                        <div class="wf-data-board">
+                            <div class="wf-data-item"><span class="wf-data-lbl">上屆</span><span class="wf-data-val"
+                                    id="wf-b-prev-val">-</span></div>
+                            <div class="wf-data-item highlight-blue"><span class="wf-data-lbl">變化</span><span
+                                    class="wf-data-val" id="wf-b-change-val">-</span></div>
+                            <div class="wf-data-item"><span class="wf-data-lbl">本屆</span><span class="wf-data-val"
+                                    id="wf-b-curr-val">-</span></div>
+                        </div>
+                        <!-- 底部純圖 -->
+                        <div class="wf-bars">
+                            <div class="wf-col">
+                                <div class="wf-bar bg-gray" id="wf-b-prev-bar"></div>
+                                <div class="wf-label">上屆</div>
+                            </div>
+                            <div class="wf-col">
+                                <div class="wf-bar bg-blue" id="wf-b-change-bar"></div>
+                                <div class="wf-label">變化</div>
+                            </div>
+                            <div class="wf-col">
+                                <div class="wf-bar bg-blue" id="wf-b-curr-bar"></div>
+                                <div class="wf-label">本屆</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -457,14 +628,34 @@
 
         function updateInfoPanel(data, areaName) {
             document.getElementById('info-name').innerText = areaName;
+
+            // ==========================================
+            // 0. 防呆機制：如果找不到資料，清空所有面板資訊
+            // ==========================================
             if (!data) {
-                document.getElementById('info-status').innerText = '無資料'; document.getElementById('info-status').className = 'info-status bg-gray';
-                document.getElementById('info-green-votes').innerText = '0'; document.getElementById('info-blue-votes').innerText = '0';
-                document.getElementById('info-green-bar').style.width = '0%'; document.getElementById('info-blue-bar').style.width = '0%';
-                document.getElementById('info-green-change').innerText = '-'; document.getElementById('info-blue-change').innerText = '-';
+                document.getElementById('info-status').innerText = '無資料';
+                document.getElementById('info-status').className = 'info-status bg-gray';
+
+                // 清空票數與橫向長條圖
+                document.getElementById('info-green-votes').innerText = '0';
+                document.getElementById('info-blue-votes').innerText = '0';
+                document.getElementById('info-green-bar').style.width = '0%';
+                document.getElementById('info-blue-bar').style.width = '0%';
+
+                // 清空瀑布圖
+                let wfIds = ['g-prev', 'g-change', 'g-curr', 'b-prev', 'b-change', 'b-curr'];
+                wfIds.forEach(id => {
+                    let valEl = document.getElementById(`wf-${id}-val`);
+                    let barEl = document.getElementById(`wf-${id}-bar`);
+                    if (valEl) valEl.innerText = '-';
+                    if (barEl) { barEl.style.height = '0%'; barEl.style.bottom = '0%'; }
+                });
                 return;
             }
 
+            // ==========================================
+            // 1. 狀態標籤更新
+            // ==========================================
             let status = data['狀態標籤'] ? data['狀態標籤'].trim() : '';
             let statusEl = document.getElementById('info-status');
             statusEl.innerText = status || '無標籤';
@@ -472,18 +663,75 @@
             else if (status.includes('藍')) statusEl.className = 'info-status bg-blue';
             else statusEl.className = 'info-status bg-gray';
 
-            let gVotes = parseInt(data['民進黨＿沈伯洋＿得票']) || 0;
-            let bVotes = parseInt(data['國民黨＿蔣萬安＿得票']) || 0;
+            // ==========================================
+            // 2. 得票數橫向長條圖更新
+            // ==========================================
+            // 這裡相容「綠營得票數」或「民進黨得票數」的欄位命名
+            let gVotes = parseInt(data['綠營得票數'] || data['民進黨＿沈伯洋＿得票']) || 0;
+            let bVotes = parseInt(data['藍營得票數'] || data['國民黨＿蔣萬安＿得票']) || 0;
             let maxVotes = Math.max(gVotes, bVotes, 1);
 
             document.getElementById('info-green-votes').innerText = gVotes.toLocaleString();
             document.getElementById('info-blue-votes').innerText = bVotes.toLocaleString();
             document.getElementById('info-green-bar').style.width = (gVotes / maxVotes * 100) + '%';
             document.getElementById('info-blue-bar').style.width = (bVotes / maxVotes * 100) + '%';
-            document.getElementById('info-green-change').innerText = data['民進黨得票差'] || '-';
-            document.getElementById('info-blue-change').innerText = data['國民黨得票差'] || '-';
-        }
 
+
+            // ==========================================
+            // 3. 真實瀑布圖 (Waterfall) 精準定位邏輯
+            // ==========================================
+            let gPrev = parseFloat((data['2022民進黨得票率'] || '0').toString().replace(/[%+]/g, '')) || 0;
+            let bPrev = parseFloat((data['2022國民黨得票率'] || '0').toString().replace(/[%+]/g, '')) || 0;
+            let gChange = parseFloat((data['民進黨得票差'] || '0').toString().replace(/[%+]/g, '')) || 0;
+            let bChange = parseFloat((data['國民黨得票差'] || '0').toString().replace(/[%+]/g, '')) || 0;
+
+            let gCurr = gPrev + gChange;
+            let bCurr = bPrev + bChange;
+
+            // 計算比例尺 (不需預留過多頂部空間，因為文字不在柱子上了)
+            let maxVal = Math.max(gPrev, gCurr, bPrev, bCurr, 50);
+            let scale = 100 / (maxVal * 1.05);
+
+            // === 🟢 綠營更新 ===
+            // 頂部看板數據更新
+            document.getElementById('wf-g-prev-val').innerText = Number(gPrev.toFixed(2)) + '%';
+            document.getElementById('wf-g-change-val').innerText = (gChange > 0 ? '+' : '') + Number(gChange.toFixed(2)) + '%';
+            document.getElementById('wf-g-curr-val').innerText = Number(gCurr.toFixed(2)) + '%';
+            // 底部柱狀圖高度與定位
+            let gPrevH = gPrev * scale;
+            document.getElementById('wf-g-prev-bar').style.height = gPrevH + '%';
+            document.getElementById('wf-g-prev-bar').style.bottom = '0%';
+
+            let gChangeH = Math.abs(gChange) * scale;
+            let gChangeB = Math.min(gPrev, gCurr) * scale;
+            document.getElementById('wf-g-change-bar').style.height = gChangeH + '%';
+            document.getElementById('wf-g-change-bar').style.bottom = gChangeB + '%'; // 懸空高度對齊
+            document.getElementById('wf-g-change-bar').style.opacity = gChange < 0 ? '0.5' : '1';
+
+            let gCurrH = gCurr * scale;
+            document.getElementById('wf-g-curr-bar').style.height = gCurrH + '%';
+            document.getElementById('wf-g-curr-bar').style.bottom = '0%';
+
+            // === 🔵 藍營更新 ===
+            // 頂部看板數據更新
+            document.getElementById('wf-b-prev-val').innerText = Number(bPrev.toFixed(2)) + '%';
+            document.getElementById('wf-b-change-val').innerText = (bChange > 0 ? '+' : '') + Number(bChange.toFixed(2)) + '%';
+            document.getElementById('wf-b-curr-val').innerText = Number(bCurr.toFixed(2)) + '%';
+            // 底部柱狀圖高度與定位
+            let bPrevH = bPrev * scale;
+            document.getElementById('wf-b-prev-bar').style.height = bPrevH + '%';
+            document.getElementById('wf-b-prev-bar').style.bottom = '0%';
+
+            let bChangeH = Math.abs(bChange) * scale;
+            let bChangeB = Math.min(bPrev, bCurr) * scale;
+            document.getElementById('wf-b-change-bar').style.height = bChangeH + '%';
+            document.getElementById('wf-b-change-bar').style.bottom = bChangeB + '%';
+            document.getElementById('wf-b-change-bar').style.opacity = bChange < 0 ? '0.5' : '1';
+
+            let bCurrH = bCurr * scale;
+            document.getElementById('wf-b-curr-bar').style.height = bCurrH + '%';
+            document.getElementById('wf-b-curr-bar').style.bottom = '0%';
+        }
         function resetMap() {
             isPinned = false;
             document.getElementById('btn-reset').style.display = 'none';
@@ -494,7 +742,7 @@
             d3.selectAll(".district").classed("fade", false).classed("hover-active", false);
 
             let totalData = globalSheetData.find(row => row['行政區'] === '全市');
-            updateInfoPanel(totalData, '台北市全市總計');
+            updateInfoPanel(totalData, '台北市全市');
         }
 
         function pinAndZoom(d) {
@@ -638,6 +886,8 @@
         }
 
         init();
+
+
     </script>
 
 </body>
