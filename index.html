@@ -645,14 +645,30 @@
                 document.getElementById('info-green-bar').style.width = '0%';
                 document.getElementById('info-blue-bar').style.width = '0%';
 
-                // 清空瀑布圖
-                let wfIds = ['g-prev', 'g-change', 'g-curr', 'b-prev', 'b-change', 'b-curr'];
-                wfIds.forEach(id => {
+                // 🌟 關鍵修正：清空 SVG 雙柱體 (移除 style，改用 setAttribute)
+                let barIds = ['g-prev', 'g-curr', 'b-prev', 'b-curr'];
+                barIds.forEach(id => {
                     let valEl = document.getElementById(`wf-${id}-val`);
                     let barEl = document.getElementById(`wf-${id}-bar`);
                     if (valEl) valEl.innerText = '-';
-                    if (barEl) { barEl.style.height = '0%'; barEl.style.bottom = '0%'; }
+                    if (barEl) {
+                        barEl.style.height = null; // 解除 CSS 封印
+                        barEl.setAttribute('height', 0);
+                        barEl.setAttribute('y', 110);
+                    }
                 });
+
+                // 清空趨勢斜線與增減文字
+                ['g', 'b'].forEach(party => {
+                    let lineEl = document.getElementById(`wf-${party}-line`);
+                    let lblEl = document.getElementById(`wf-${party}-change-lbl`);
+                    if (lineEl) lineEl.style.opacity = 0;
+                    if (lblEl) {
+                        lblEl.style.opacity = 0;
+                        lblEl.textContent = '-';
+                    }
+                });
+
                 return;
             }
 
