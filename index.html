@@ -1,272 +1,645 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>116年九合一大選台北市結果</title>
-    <!-- 引入 D3.js -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        body { font-family: '微軟正黑體', sans-serif; background-color: #f5f6fa; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .main-title { font-size: 32px; font-weight: bold; color: #333; margin-bottom: 20px; text-align: center; }
-        .dashboard { width: 100%; max-width: 1100px; display: flex; gap: 20px; }
+        body {
+            font-family: '微軟正黑體', sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-        /* ================= 左側地圖區 ================= */
-        .map-section { flex: 2; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; }
-        
-        .header-controls { display: flex; justify-content: space-between; width: 100%; margin-bottom: 15px; align-items: center; }
-        .toggle-container { display: flex; gap: 10px; }
-        .btn { padding: 8px 20px; font-size: 16px; font-weight: bold; border: 2px solid #333; background-color: white; color: #333; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
-        .btn:hover { background-color: #f0f0f0; }
-        .btn.active { background-color: #333; color: white; }
-        
-        /* 返回按鈕 (特別樣式) */
-        #btn-reset { display: none; background-color: #e74c3c; color: white; border-color: #e74c3c; }
-        #btn-reset:hover { background-color: #c0392b; border-color: #c0392b; }
+        .main-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-        #map-container { width: 100%; text-align: center; }
-        svg { width: 100%; height: 500px; background-color: transparent; }
+        .dashboard {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            gap: 20px;
+        }
 
-        /* 地圖特效 */
-        .district { stroke: #ffffff; cursor: pointer; transition: opacity 0.3s ease; }
-        .district.fade { opacity: 0.2; }
-        .district.hover-active { opacity: 1; stroke: #333; stroke-width: 1.5px !important; }
+        .map-section {
+            flex: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-        /* ================= 右側資訊面板 ================= */
-        .info-section { flex: 1; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 20px; }
-        .info-name { font-size: 28px; font-weight: bold; color: #222; border-bottom: 2px solid #eee; padding-bottom: 10px; margin: 0; }
-        .info-status { display: inline-block; padding: 6px 14px; border-radius: 6px; font-size: 16px; font-weight: bold; color: white; width: fit-content; }
-        
-        .bg-green { background-color: #2E7D32; } .bg-blue { background-color: #1565C0; } .bg-gray { background-color: #999; }
-        .text-green { color: #2E7D32; } .text-blue { color: #1565C0; }
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
-        .vote-item { margin-bottom: 15px; }
-        .vote-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 6px; font-size: 15px; }
-        .bar-bg { width: 100%; height: 12px; background: #eee; border-radius: 6px; overflow: hidden; }
-        .bar-fill { height: 100%; transition: width 0.4s ease-out; }
+        .left-controls,
+        .right-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
 
-        .change-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; }
-        .change-item { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; margin: 8px 0; }
+        .btn {
+            padding: 8px 18px;
+            font-size: 15px;
+            font-weight: bold;
+            border: 2px solid #333;
+            background-color: white;
+            color: #333;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .btn.active {
+            background-color: #333;
+            color: white;
+        }
+
+        /* 🌟 搜尋框與下拉選單樣式 */
+        .search-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        #search-input {
+            padding: 8px 15px;
+            font-size: 15px;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 180px;
+        }
+
+        #search-input:focus {
+            border-color: #333;
+        }
+
+        #search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            margin-top: 5px;
+        }
+
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            font-size: 15px;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+            color: #2E7D32;
+            font-weight: bold;
+        }
+
+        #btn-reset {
+            display: none;
+            background-color: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+
+        #btn-reset:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+        }
+
+        #map-container {
+            width: 100%;
+            text-align: center;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            background-color: transparent;
+        }
+
+        .district {
+            stroke: #ffffff;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .district.fade {
+            opacity: 0.2;
+        }
+
+        .district.hover-active {
+            opacity: 1;
+            stroke: #333;
+            stroke-width: 1.5px !important;
+        }
+
+        .info-section {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #222;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin: 0;
+        }
+
+        .info-status {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            width: fit-content;
+        }
+
+        .bg-green {
+            background-color: #2E7D32;
+        }
+
+        .bg-blue {
+            background-color: #1565C0;
+        }
+
+        .bg-gray {
+            background-color: #999;
+        }
+
+        .text-green {
+            color: #2E7D32;
+        }
+
+        .text-blue {
+            color: #1565C0;
+        }
+
+        .vote-item {
+            margin-bottom: 15px;
+        }
+
+        .vote-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .bar-bg {
+            width: 100%;
+            height: 12px;
+            background: #eee;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            transition: width 0.4s ease-out;
+        }
+
+        .change-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .change-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        /* ================= RWD 響應式設計 (800px 以下) ================= */
+        @media (max-width: 800px) {
+            .dashboard {
+                flex-direction: column;
+                /* 改為上下排列 */
+            }
+
+            .map-section,
+            .info-section {
+                width: 100%;
+                /* 寬度佔滿 */
+                box-sizing: border-box;
+                /* 確保 padding 不會撐破外框 */
+                flex: none;
+                /* 取消原本的 flex 比例 */
+            }
+
+            svg {
+                height: 400px;
+                /* 在手機上稍微縮小地圖高度，避免佔用太多版面 */
+            }
+
+            .header-controls {
+                flex-direction: column;
+                /* 控制列也改為上下堆疊 */
+                gap: 15px;
+            }
+
+            .left-controls,
+            .right-controls {
+                width: 100%;
+                justify-content: center;
+                /* 按鈕置中對齊 */
+                flex-wrap: wrap;
+            }
+
+            .search-wrapper {
+                flex: 1;
+                /* 讓搜尋框外掛容器可以彈性延伸 */
+                min-width: 200px;
+            }
+
+            #search-input {
+                width: 100%;
+                /* 搜尋框在手機上佔滿剩餘空間 */
+                box-sizing: border-box;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-<h1 class="main-title">116年九合一大選台北市結果</h1>
+    <h1 class="main-title">116年九合一大選台北市結果</h1>
 
-<div class="dashboard">
-    <div class="map-section">
-        <div class="header-controls">
-            <div class="toggle-container">
-                <button id="btn-district" class="btn active" onclick="switchLevel('district')">依區別</button>
-                <button id="btn-village" class="btn" onclick="switchLevel('village')">依里別</button>
+    <div class="dashboard">
+        <div class="map-section">
+            <div class="header-controls">
+                <div class="left-controls">
+                    <button id="btn-district" class="btn active" onclick="switchLevel('district')">依區別</button>
+                    <button id="btn-village" class="btn" onclick="switchLevel('village')">依里別</button>
+                </div>
+                <div class="right-controls">
+                    <!-- 🌟 將搜尋框與選單包裝起來 -->
+                    <div class="search-wrapper">
+                        <input type="text" id="search-input" placeholder="搜尋區名或里名..." oninput="handleSearchInput()"
+                            onkeypress="handleEnter(event)">
+                        <div id="search-suggestions"></div>
+                    </div>
+                    <button id="btn-search" class="btn" onclick="searchArea()">搜尋</button>
+                    <button id="btn-reset" class="btn" onclick="resetMap()">返回全市</button>
+                </div>
             </div>
-            <!-- 新增返回全市按鈕 -->
-            <button id="btn-reset" class="btn" onclick="resetMap()">返回全市</button>
+            <div id="map-container">
+                <svg id="map-svg" viewBox="0 0 700 500">
+                    <defs>
+                        <pattern id="pattern-green-flip" width="10" height="10" patternTransform="rotate(45)"
+                            patternUnits="userSpaceOnUse">
+                            <rect width="10" height="10" fill="#2E7D32"></rect>
+                            <line x1="0" y1="0" x2="0" y2="10" stroke="#81C784" stroke-width="3"></line>
+                        </pattern>
+                        <pattern id="pattern-blue-flip" width="10" height="10" patternTransform="rotate(45)"
+                            patternUnits="userSpaceOnUse">
+                            <rect width="10" height="10" fill="#1565C0"></rect>
+                            <line x1="0" y1="0" x2="0" y2="10" stroke="#90CAF9" stroke-width="3"></line>
+                        </pattern>
+                    </defs>
+                    <g id="map-group"></g>
+                </svg>
+            </div>
         </div>
-        <div id="map-container">
-            <svg id="map-svg">
-                <defs>
-                    <pattern id="pattern-green-flip" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-                        <rect width="10" height="10" fill="#2E7D32"></rect><line x1="0" y1="0" x2="0" y2="10" stroke="#81C784" stroke-width="3"></line>
-                    </pattern>
-                    <pattern id="pattern-blue-flip" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-                        <rect width="10" height="10" fill="#1565C0"></rect><line x1="0" y1="0" x2="0" y2="10" stroke="#90CAF9" stroke-width="3"></line>
-                    </pattern>
-                </defs>
-                <g id="map-group"></g>
-            </svg>
+
+        <div class="info-section">
+            <h2 class="info-name" id="info-name">請在地圖上選擇區域</h2>
+            <div class="info-status bg-gray" id="info-status">等待選擇...</div>
+            <div class="vote-item">
+                <div class="vote-header text-green"><span>綠營得票數</span><span id="info-green-votes">0</span></div>
+                <div class="bar-bg">
+                    <div class="bar-fill bg-green" id="info-green-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="vote-item">
+                <div class="vote-header text-blue"><span>藍營得票數</span><span id="info-blue-votes">0</span></div>
+                <div class="bar-bg">
+                    <div class="bar-fill bg-blue" id="info-blue-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="change-box">
+                <div class="change-item text-green">綠營得票率變化: <span id="info-green-change">-</span></div>
+                <div class="change-item text-blue">藍營得票率變化: <span id="info-blue-change">-</span></div>
+            </div>
         </div>
     </div>
 
-    <div class="info-section">
-        <h2 class="info-name" id="info-name">請在地圖上選擇區域</h2>
-        <div class="info-status bg-gray" id="info-status">等待選擇...</div>
-        <div class="vote-item"><div class="vote-header text-green"><span>綠營得票數</span><span id="info-green-votes">0</span></div><div class="bar-bg"><div class="bar-fill bg-green" id="info-green-bar" style="width: 0%"></div></div></div>
-        <div class="vote-item"><div class="vote-header text-blue"><span>藍營得票數</span><span id="info-blue-votes">0</span></div><div class="bar-bg"><div class="bar-fill bg-blue" id="info-blue-bar" style="width: 0%"></div></div></div>
-        <div class="change-box">
-            <div class="change-item text-green">綠營得票率變化: <span id="info-green-change">-</span></div>
-            <div class="change-item text-blue">藍營得票率變化: <span id="info-blue-change">-</span></div>
-        </div>
-    </div>
-</div>
+    <script>
+        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdiY7lUyovm-a3-yLveLIkzUibwRVJw6ueYEl1ZvDub16t7SaP2N-ZaTK43O6SiCsaLs6p-om_yZk/pub?gid=1892897354&single=true&output=csv';
+        const TAIPEI_GEOJSON_URL = 'https://gist.githubusercontent.com/JJBatman-FW/dfc0d93794df27e14e8d26954a644d70/raw';
 
-<script>
-    const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTOdiY7lUyovm-a3-yLveLIkzUibwRVJw6ueYEl1ZvDub16t7SaP2N-ZaTK43O6SiCsaLs6p-om_yZk/pub?gid=1892897354&single=true&output=csv'; 
-    const TAIPEI_GEOJSON_URL = 'https://gist.githubusercontent.com/JJBatman-FW/dfc0d93794df27e14e8d26954a644d70/raw'; 
+        let globalSheetData = [];
+        let globalGeoData = null;
+        let currentLevel = 'district';
 
-    let globalSheetData = [];
-    let globalGeoData = null; 
-    let currentLevel = 'district'; 
-    
-    // 🌟 新增鎖定狀態變數
-    let isPinned = false;
-    let pathGenerator; // 將 path 設為全域，以便縮放計算使用
+        let isPinned = false;
+        let pathGenerator;
 
-    function getFillColor(status) {
-        let cleanStatus = status ? status.trim() : ''; 
-        switch(cleanStatus) {
-            case '綠守住': return '#2E7D32'; 
-            case '藍守住': return '#1565C0'; 
-            case '綠翻盤': return 'url(#pattern-green-flip)';
-            case '藍翻盤': return 'url(#pattern-blue-flip)';
-            default: return '#cccccc'; 
-        }
-    }
-
-    function updateInfoPanel(data, areaName) {
-        document.getElementById('info-name').innerText = areaName;
-        if (!data) {
-            document.getElementById('info-status').innerText = '無資料'; document.getElementById('info-status').className = 'info-status bg-gray';
-            document.getElementById('info-green-votes').innerText = '0'; document.getElementById('info-blue-votes').innerText = '0';
-            document.getElementById('info-green-bar').style.width = '0%'; document.getElementById('info-blue-bar').style.width = '0%';
-            document.getElementById('info-green-change').innerText = '-'; document.getElementById('info-blue-change').innerText = '-';
-            return;
-        }
-
-        let status = data['狀態標籤'] ? data['狀態標籤'].trim() : '';
-        let statusEl = document.getElementById('info-status');
-        statusEl.innerText = status || '無標籤';
-        if(status.includes('綠')) statusEl.className = 'info-status bg-green';
-        else if(status.includes('藍')) statusEl.className = 'info-status bg-blue';
-        else statusEl.className = 'info-status bg-gray';
-
-        let gVotes = parseInt(data['民進黨＿沈伯洋＿得票']) || 0;
-        let bVotes = parseInt(data['國民黨＿蔣萬安＿得票']) || 0;
-        let maxVotes = Math.max(gVotes, bVotes, 1); 
-
-        document.getElementById('info-green-votes').innerText = gVotes.toLocaleString(); 
-        document.getElementById('info-blue-votes').innerText = bVotes.toLocaleString();
-        document.getElementById('info-green-bar').style.width = (gVotes / maxVotes * 100) + '%';
-        document.getElementById('info-blue-bar').style.width = (bVotes / maxVotes * 100) + '%';
-
-        document.getElementById('info-green-change').innerText = data['民進黨得票差'] || '-';
-        document.getElementById('info-blue-change').innerText = data['國民黨得票差'] || '-';
-    }
-
-    // 🌟 解除鎖定並還原畫面的函式
-    function resetMap() {
-        isPinned = false;
-        document.getElementById('btn-reset').style.display = 'none'; // 隱藏按鈕
-        
-        // 恢復地圖縮放 (平滑過渡)
-        d3.select("#map-group").transition().duration(750).attr("transform", "");
-        
-        // 清除所有高亮/變暗的樣式
-        d3.selectAll(".district").classed("fade", false).classed("hover-active", false);
-        
-        // 將面板恢復為全市總計
-        let totalData = globalSheetData.find(row => row['行政區'] === '全市');
-        updateInfoPanel(totalData, '台北市全市總計');
-    }
-
-    function renderMap(level) {
-        resetMap(); // 每次切換層級時，先重置畫面
-        
-        const mapGroup = d3.select("#map-group");
-        mapGroup.selectAll("*").remove(); 
-
-        let projection = d3.geoIdentity().reflectY(true).fitSize([700, 500], globalGeoData);
-        pathGenerator = d3.geoPath().projection(projection);
-
-        mapGroup.selectAll("path")
-          .data(globalGeoData.features)
-          .enter()
-          .append("path")
-          .attr("d", pathGenerator)
-          .attr("class", "district")
-          .style("stroke-width", level === 'district' ? "0.1px" : "0.5px")
-          .style("stroke", level === 'district' ? "rgba(255,255,255,0.2)" : "#fff")
-          .attr("fill", function(d) {
-              let districtName = d.properties.TOWNNAME; 
-              let villName = d.properties.VILLNAME; 
-              let data = globalSheetData.find(row => row['行政區']?.trim() === districtName && row['里別']?.trim() === (level === 'district' ? '全區' : villName));
-              d.sheetData = data; 
-              return data ? getFillColor(data['狀態標籤']) : '#ccc';
-          })
-          
-          // --- 滑鼠懸停邏輯 ---
-          .on("mouseover", function(event, d) {
-              if (isPinned) return; // 🔒 如果已鎖定，忽略懸停事件
-              
-              let currentTown = d.properties.TOWNNAME; 
-              let currentVill = d.properties.VILLNAME;
-              
-              d3.selectAll(".district").classed("fade", true).classed("hover-active", false);
-
-              if (level === 'district') {
-                  d3.selectAll(".district").filter(p => p.properties.TOWNNAME === currentTown).classed("fade", false).classed("hover-active", true);
-                  updateInfoPanel(d.sheetData, currentTown);
-              } else {
-                  d3.select(this).classed("fade", false).classed("hover-active", true);
-                  updateInfoPanel(d.sheetData, `${currentTown} ${currentVill}`);
-              }
-          })
-          .on("mouseout", function(event, d) {
-              if (isPinned) return; // 🔒 如果已鎖定，不清除樣式
-              d3.selectAll(".district").classed("fade", false).classed("hover-active", false);
-              
-              let totalData = globalSheetData.find(row => row['行政區'] === '全市');
-              updateInfoPanel(totalData, '台北市全市總計');
-          })
-          
-          // 🌟 --- 點擊縮放邏輯 ---
-          .on("click", function(event, d) {
-              isPinned = true;
-              document.getElementById('btn-reset').style.display = 'block'; // 顯示返回按鈕
-              
-              // 1. 強制再次上色 (避免游標滑太快導致顏色不對)
-              let currentTown = d.properties.TOWNNAME; 
-              d3.selectAll(".district").classed("fade", true).classed("hover-active", false);
-              if (level === 'district') {
-                  d3.selectAll(".district").filter(p => p.properties.TOWNNAME === currentTown).classed("fade", false).classed("hover-active", true);
-                  updateInfoPanel(d.sheetData, currentTown);
-              } else {
-                  d3.select(this).classed("fade", false).classed("hover-active", true);
-                  updateInfoPanel(d.sheetData, `${currentTown} ${d.properties.VILLNAME}`);
-              }
-
-              // 2. 計算邊界與縮放倍率
-              let bounds = pathGenerator.bounds(d);
-              let dx = bounds[1][0] - bounds[0][0];
-              let dy = bounds[1][1] - bounds[0][1];
-              let x = (bounds[0][0] + bounds[1][0]) / 2;
-              let y = (bounds[0][1] + bounds[1][1]) / 2;
-              
-              // 設定縮放大小，區層級不用放太大，里層級可以放更大
-              let maxScale = level === 'district' ? 2 : 4; 
-              let scale = Math.max(1, Math.min(maxScale, 0.9 / Math.max(dx / 700, dy / 500)));
-              let translate = [700 / 2 - scale * x, 500 / 2 - scale * y];
-
-              // 3. 執行縮放動畫
-              d3.select("#map-group").transition().duration(750)
-                .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-          });
-    }
-
-    function switchLevel(level) {
-        if (currentLevel === level) return;
-        currentLevel = level;
-        document.getElementById('btn-district').classList.remove('active');
-        document.getElementById('btn-village').classList.remove('active');
-        document.getElementById(`btn-${level}`).classList.add('active');
-        renderMap(level);
-    }
-
-    function init() {
-        Promise.all([
-            d3.csv(GOOGLE_SHEET_CSV_URL + '&t=' + new Date().getTime()),
-            d3.json(TAIPEI_GEOJSON_URL) 
-        ]).then(function([sheetData, geoData]) {
-            globalSheetData = sheetData;
-            globalGeoData = geoData; 
-            renderMap('district');
-        }).catch(function(error) {
-            console.error("❌ 讀取資料發生錯誤：", error);
+        // 點擊畫面其他地方時關閉搜尋建議框
+        document.addEventListener('click', function (event) {
+            let wrapper = document.querySelector('.search-wrapper');
+            let box = document.getElementById('search-suggestions');
+            if (wrapper && !wrapper.contains(event.target)) {
+                box.style.display = 'none';
+            }
         });
-    }
 
-    init();
-</script>
+        // 🌟 處理輸入與顯示建議的邏輯
+        function handleSearchInput() {
+            let query = document.getElementById('search-input').value.trim();
+            let box = document.getElementById('search-suggestions');
+            box.innerHTML = ''; // 清空先前的建議
+
+            if (!query) {
+                box.style.display = 'none';
+                return;
+            }
+
+            let matches = new Set();
+            // 遍歷所有圖資比對字串
+            globalGeoData.features.forEach(f => {
+                let town = f.properties.TOWNNAME;
+                let vill = f.properties.VILLNAME;
+                let full = town + vill;
+
+                if (town.includes(query)) matches.add(town);
+                if (vill.includes(query)) matches.add(vill);
+                if (full.includes(query)) matches.add(full);
+            });
+
+            if (matches.size === 0) {
+                box.style.display = 'none';
+                return;
+            }
+
+            // 產生下拉選單選項
+            box.style.display = 'block';
+            matches.forEach(match => {
+                let item = document.createElement('div');
+                item.className = 'suggestion-item';
+                // 將關鍵字標示出來 (視覺優化)
+                item.innerHTML = match.replace(new RegExp(query, 'g'), `<strong>${query}</strong>`);
+                item.onclick = function () {
+                    document.getElementById('search-input').value = match;
+                    box.style.display = 'none';
+                    searchArea(); // 點擊直接觸發搜尋
+                };
+                box.appendChild(item);
+            });
+        }
+
+        function getFillColor(status) {
+            let cleanStatus = status ? status.trim() : '';
+            switch (cleanStatus) {
+                case '綠守住': return '#2E7D32';
+                case '藍守住': return '#1565C0';
+                case '綠翻盤': return 'url(#pattern-green-flip)';
+                case '藍翻盤': return 'url(#pattern-blue-flip)';
+                default: return '#cccccc';
+            }
+        }
+
+        function updateInfoPanel(data, areaName) {
+            document.getElementById('info-name').innerText = areaName;
+            if (!data) {
+                document.getElementById('info-status').innerText = '無資料'; document.getElementById('info-status').className = 'info-status bg-gray';
+                document.getElementById('info-green-votes').innerText = '0'; document.getElementById('info-blue-votes').innerText = '0';
+                document.getElementById('info-green-bar').style.width = '0%'; document.getElementById('info-blue-bar').style.width = '0%';
+                document.getElementById('info-green-change').innerText = '-'; document.getElementById('info-blue-change').innerText = '-';
+                return;
+            }
+
+            let status = data['狀態標籤'] ? data['狀態標籤'].trim() : '';
+            let statusEl = document.getElementById('info-status');
+            statusEl.innerText = status || '無標籤';
+            if (status.includes('綠')) statusEl.className = 'info-status bg-green';
+            else if (status.includes('藍')) statusEl.className = 'info-status bg-blue';
+            else statusEl.className = 'info-status bg-gray';
+
+            let gVotes = parseInt(data['民進黨＿沈伯洋＿得票']) || 0;
+            let bVotes = parseInt(data['國民黨＿蔣萬安＿得票']) || 0;
+            let maxVotes = Math.max(gVotes, bVotes, 1);
+
+            document.getElementById('info-green-votes').innerText = gVotes.toLocaleString();
+            document.getElementById('info-blue-votes').innerText = bVotes.toLocaleString();
+            document.getElementById('info-green-bar').style.width = (gVotes / maxVotes * 100) + '%';
+            document.getElementById('info-blue-bar').style.width = (bVotes / maxVotes * 100) + '%';
+            document.getElementById('info-green-change').innerText = data['民進黨得票差'] || '-';
+            document.getElementById('info-blue-change').innerText = data['國民黨得票差'] || '-';
+        }
+
+        function resetMap() {
+            isPinned = false;
+            document.getElementById('btn-reset').style.display = 'none';
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-suggestions').style.display = 'none';
+
+            d3.select("#map-group").transition().duration(750).attr("transform", "");
+            d3.selectAll(".district").classed("fade", false).classed("hover-active", false);
+
+            let totalData = globalSheetData.find(row => row['行政區'] === '全市');
+            updateInfoPanel(totalData, '台北市全市總計');
+        }
+
+        function pinAndZoom(d) {
+            isPinned = true;
+            document.getElementById('btn-reset').style.display = 'block';
+            document.getElementById('search-suggestions').style.display = 'none'; // 鎖定時隱藏建議框
+
+            let currentTown = d.properties.TOWNNAME;
+            d3.selectAll(".district").classed("fade", true).classed("hover-active", false);
+
+            if (currentLevel === 'district') {
+                d3.selectAll(".district").filter(p => p.properties.TOWNNAME === currentTown).classed("fade", false).classed("hover-active", true);
+                updateInfoPanel(d.sheetData, currentTown);
+            } else {
+                d3.selectAll(".district").filter(p => p === d).classed("fade", false).classed("hover-active", true);
+                updateInfoPanel(d.sheetData, `${currentTown} ${d.properties.VILLNAME}`);
+            }
+
+            let bounds = pathGenerator.bounds(d);
+            let dx = bounds[1][0] - bounds[0][0];
+            let dy = bounds[1][1] - bounds[0][1];
+            let x = (bounds[0][0] + bounds[1][0]) / 2;
+            let y = (bounds[0][1] + bounds[1][1]) / 2;
+
+            let maxScale = currentLevel === 'district' ? 2.5 : 4.5;
+            let scale = Math.max(1, Math.min(maxScale, 0.9 / Math.max(dx / 700, dy / 500)));
+            let translate = [700 / 2 - scale * x, 500 / 2 - scale * y];
+
+            d3.select("#map-group").transition().duration(750)
+                .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+        }
+
+        function searchArea() {
+            let query = document.getElementById('search-input').value.trim();
+            document.getElementById('search-suggestions').style.display = 'none';
+            if (!query) return;
+
+            let targetFeature = null;
+            let targetLevel = currentLevel;
+
+            let villageMatch = globalGeoData.features.find(f => f.properties.VILLNAME === query || (f.properties.TOWNNAME + f.properties.VILLNAME) === query);
+
+            if (villageMatch) {
+                targetFeature = villageMatch;
+                targetLevel = 'village';
+            } else {
+                let districtMatch = globalGeoData.features.find(f => f.properties.TOWNNAME === query);
+                if (districtMatch) {
+                    targetFeature = districtMatch;
+                    targetLevel = 'district';
+                }
+            }
+
+            if (!targetFeature) {
+                alert("找不到該區域，請輸入完整的區名或里名 (例如: 萬華區 或 榮德里)");
+                return;
+            }
+
+            if (currentLevel !== targetLevel) {
+                switchLevel(targetLevel);
+            }
+            pinAndZoom(targetFeature);
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                searchArea();
+            }
+        }
+
+        function renderMap(level) {
+            resetMap();
+            const mapGroup = d3.select("#map-group");
+            mapGroup.selectAll("*").remove();
+
+            let projection = d3.geoIdentity().reflectY(true).fitSize([700, 500], globalGeoData);
+            pathGenerator = d3.geoPath().projection(projection);
+
+            mapGroup.selectAll("path")
+                .data(globalGeoData.features)
+                .enter()
+                .append("path")
+                .attr("d", pathGenerator)
+                .attr("class", "district")
+                .style("stroke-width", level === 'district' ? "0.1px" : "0.5px")
+                .style("stroke", level === 'district' ? "rgba(255,255,255,0.2)" : "#fff")
+                .attr("fill", function (d) {
+                    let districtName = d.properties.TOWNNAME;
+                    let villName = d.properties.VILLNAME;
+                    let data = globalSheetData.find(row => row['行政區']?.trim() === districtName && row['里別']?.trim() === (level === 'district' ? '全區' : villName));
+                    d.sheetData = data;
+                    return data ? getFillColor(data['狀態標籤']) : '#ccc';
+                })
+                .on("mouseover", function (event, d) {
+                    if (isPinned) return;
+
+                    let currentTown = d.properties.TOWNNAME;
+                    let currentVill = d.properties.VILLNAME;
+
+                    d3.selectAll(".district").classed("fade", true).classed("hover-active", false);
+
+                    if (level === 'district') {
+                        d3.selectAll(".district").filter(p => p.properties.TOWNNAME === currentTown).classed("fade", false).classed("hover-active", true);
+                        updateInfoPanel(d.sheetData, currentTown);
+                    } else {
+                        d3.select(this).classed("fade", false).classed("hover-active", true);
+                        updateInfoPanel(d.sheetData, `${currentTown} ${currentVill}`);
+                    }
+                })
+                .on("mouseout", function (event, d) {
+                    if (isPinned) return;
+                    d3.selectAll(".district").classed("fade", false).classed("hover-active", false);
+                    let totalData = globalSheetData.find(row => row['行政區'] === '全市');
+                    updateInfoPanel(totalData, '台北市全市總計');
+                })
+                .on("click", function (event, d) {
+                    pinAndZoom(d);
+                });
+        }
+
+        function switchLevel(level) {
+            if (currentLevel === level) return;
+            currentLevel = level;
+            document.getElementById('btn-district').classList.remove('active');
+            document.getElementById('btn-village').classList.remove('active');
+            document.getElementById(`btn-${level}`).classList.add('active');
+            renderMap(level);
+        }
+
+        function init() {
+            Promise.all([
+                d3.csv(GOOGLE_SHEET_CSV_URL + '&t=' + new Date().getTime()),
+                d3.json(TAIPEI_GEOJSON_URL)
+            ]).then(function ([sheetData, geoData]) {
+                globalSheetData = sheetData;
+                globalGeoData = geoData;
+                renderMap('district');
+            }).catch(function (error) {
+                console.error("❌ 讀取資料發生錯誤：", error);
+            });
+        }
+
+        init();
+    </script>
 
 </body>
+
 </html>
