@@ -25,24 +25,68 @@
             text-align: center;
         }
 
+        /* 🌟 核心版面修改：全面改為上下垂直排版 */
+        /* 1. 將 dashboard 升級為一張「無縫大卡片」 */
         .dashboard {
             width: 100%;
-            max-width: 1100px;
+            max-width: 900px;
             display: flex;
-            gap: 20px;
+            flex-direction: column;
+            gap: 0;
+            /* 🌟 移除間距，讓上下貼合 */
+            background: white;
+            /* 🌟 統一大背景 */
+            border-radius: 12px;
+            /* 🌟 統一大圓角 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            /* 🌟 統一外圍陰影 */
+            overflow: hidden;
+            /* 確保內層不會超出圓角 */
         }
 
+        /* 2. 移除地圖區原本的圓角與陰影，並加上底部邊線作區隔 */
         .map-section {
-            flex: 2;
+            width: 100%;
+            height: 50vh;
+            min-height: 450px;
             background: white;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            /* 🌟 取消獨立的陰影與圓角 */
+            border-radius: 0;
+            box-shadow: none;
+            border-bottom: 2px solid #f4f6f8;
+            /* 🌟 兩塊合併後，加上一條淡淡的分隔線增加層次感 */
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
-            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* 3. 移除資訊面板原本的圓角與陰影 */
+        .info-section {
+            width: 100%;
+            background: white;
+            padding: 25px;
+            /* 🌟 取消獨立的陰影與圓角 */
+            border-radius: 0;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 4. 標題置左 */
+        .info-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #222;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin: 0;
+            text-align: left;
+            /* 🌟 關鍵：置中改為置左 */
         }
 
         .header-controls {
@@ -84,7 +128,7 @@
             color: white;
         }
 
-        /* 🌟 搜尋框與下拉選單樣式 */
+        /* 搜尋框與下拉選單樣式 */
         .search-wrapper {
             position: relative;
             display: inline-block;
@@ -151,12 +195,21 @@
 
         #map-container {
             width: 100%;
+            flex: 1;
+            /* 🌟 關鍵：讓地圖自動填滿「扣除按鈕後」的剩餘高度 */
+            min-height: 0;
+            /* 確保不會把外層容器撐破 */
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         svg {
             width: 100%;
-            height: auto;
+            height: 100%;
+            max-height: 100%;
+            /* 確保地圖嚴格限制在容器範圍內 */
             background-color: transparent;
         }
 
@@ -176,8 +229,9 @@
             stroke-width: 1.5px !important;
         }
 
+        /* 🌟 下方資訊面板 */
         .info-section {
-            flex: 1;
+            width: 100%;
             background: white;
             padding: 25px;
             border-radius: 12px;
@@ -185,15 +239,21 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            box-sizing: border-box;
         }
 
         .info-name {
+            width: 100%;
+            /* 🌟 確保標題區塊撐滿整個卡片寬度 */
             font-size: 28px;
             font-weight: bold;
             color: #222;
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
             margin: 0;
+            text-align: left !important;
+            /* 🌟 強制文字靠左對齊 */
+            box-sizing: border-box;
         }
 
         .info-status {
@@ -226,6 +286,14 @@
             color: #1565C0;
         }
 
+        .bg-cyan {
+            background-color: #00BCD4;
+        }
+
+        .text-cyan {
+            color: #0097A7;
+        }
+
         .vote-item {
             margin-bottom: 15px;
         }
@@ -248,150 +316,89 @@
 
         .bar-fill {
             height: 100%;
-            transition: width 0.4s ease-out;
+            transition: width 0.6s ease-out;
         }
 
-        .change-box {
+        /* ================= 新版右側面板 (照片對決+輪播) 樣式 ================= */
+        .vs-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            min-height: 160px;
+        }
+
+        /* 照片容器與動畫設定 */
+        .photo-container {
+            width: 130px;
+            height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 容器放大，讓贏家有空間膨脹 */
+        .candidate-photo {
+            width: 70px;
+            /* 🌟 新增：給定初始寬度，防止載入時破圖 */
+            height: 70px;
+            /* 🌟 新增：給定初始高度 */
+
+            border-radius: 50%;
+            object-fit: cover;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border: 3px solid #fff;
+        }
+
+        #photo-green {
+            border-color: #2E7D32;
+        }
+
+        #photo-blue {
+            border-color: #1565C0;
+        }
+
+        .vs-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .vs-result-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* 輪播區塊樣式 */
+        .carousel-section {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 12px;
             border: 1px solid #e9ecef;
         }
 
-        .change-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 8px 0;
-        }
-
-        /* 真實瀑布圖樣式 (絕對定位完美對齊版) */
-        .waterfall-box {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-            gap: 12px;
-        }
-
-        .wf-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 48%;
-        }
-
-        .wf-party-label {
-            font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 8px;
-            border-bottom: 2px solid;
-            padding-bottom: 3px;
-            width: 100%;
+        .carousel-header {
             text-align: center;
-        }
-
-        /* 雙格看板 */
-        .wf-data-board-v2 {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .wf-data-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #f8f9fa;
-            border-radius: 4px;
-            padding: 6px 1px;
-            border: 1px solid #eee;
-        }
-
-        .wf-data-lbl {
-            font-size: 10px;
-            color: #777;
-            margin-bottom: 2px;
-        }
-
-        .wf-data-val {
-            font-size: 13px;
             font-weight: bold;
-        }
-
-        /* 趨勢 SVG 容器 (高度 110px 緊湊) */
-        .wf-trend-svg-container {
-            width: 100%;
-            height: 110px;
-        }
-
-        .wf-trend-svg-container svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-
-        /* SVG 內部樣式 */
-        .wf-v2-bar {
-            transition: height 0.5s ease, y 0.5s ease;
-            cursor: pointer;
-        }
-
-        .wf-v2-bar:hover {
-            opacity: 0.85;
-        }
-
-        .wf-v2-lbl {
-            font-size: 10px;
-            fill: #666;
-            text-anchor: middle;
-        }
-
-        /* 關鍵：上方的增減幅數值 */
-        .wf-v2-change-val {
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.5s ease;
-        }
-
-        /* 連接斜線 */
-        #wf-g-line,
-        #wf-b-line {
-            transition: all 0.5s ease;
-        }
-
-        .change-box {
-            padding-bottom: 15px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #555;
+            transition: color 0.3s;
         }
 
         /* ================= RWD 響應式設計 (800px 以下) ================= */
         @media (max-width: 800px) {
-            .dashboard {
-                flex-direction: column;
-                /* 改為上下排列 */
-            }
-
-            .map-section,
-            .info-section {
-                width: 100%;
-                /* 寬度佔滿 */
-                box-sizing: border-box;
-                /* 確保 padding 不會撐破外框 */
-                flex: none;
-                /* 取消原本的 flex 比例 */
-            }
-
-            svg {
-                height: 400px;
-                /* 在手機上稍微縮小地圖高度，避免佔用太多版面 */
-            }
-
             .header-controls {
                 flex-direction: column;
-                /* 控制列也改為上下堆疊 */
                 gap: 15px;
             }
 
@@ -399,19 +406,16 @@
             .right-controls {
                 width: 100%;
                 justify-content: center;
-                /* 按鈕置中對齊 */
                 flex-wrap: wrap;
             }
 
             .search-wrapper {
                 flex: 1;
-                /* 讓搜尋框外掛容器可以彈性延伸 */
                 min-width: 200px;
             }
 
             #search-input {
                 width: 100%;
-                /* 搜尋框在手機上佔滿剩餘空間 */
                 box-sizing: border-box;
             }
         }
@@ -423,6 +427,7 @@
     <h1 class="main-title">116年九合一大選台北市結果</h1>
 
     <div class="dashboard">
+        <!-- 🌟 上方：地圖區 -->
         <div class="map-section">
             <div class="header-controls">
                 <div class="left-controls">
@@ -430,7 +435,6 @@
                     <button id="btn-village" class="btn" onclick="switchLevel('village')">依里別</button>
                 </div>
                 <div class="right-controls">
-                    <!-- 🌟 將搜尋框與選單包裝起來 -->
                     <div class="search-wrapper">
                         <input type="text" id="search-input" placeholder="搜尋區名或里名..." oninput="handleSearchInput()"
                             onkeypress="handleEnter(event)">
@@ -441,7 +445,7 @@
                 </div>
             </div>
             <div id="map-container">
-                <svg id="map-svg" viewBox="0 0 700 500">
+                <svg id="map-svg" viewBox="0 0 700 500" preserveAspectRatio="xMidYMid meet">
                     <defs>
                         <pattern id="pattern-green-flip" width="10" height="10" patternTransform="rotate(45)"
                             patternUnits="userSpaceOnUse">
@@ -459,95 +463,63 @@
             </div>
         </div>
 
+        <!-- 🌟 下方：資訊面板區 -->
         <div class="info-section">
             <h2 class="info-name" id="info-name">請在地圖上選擇區域</h2>
-            <div class="info-status bg-gray" id="info-status">等待選擇...</div>
-            <div class="vote-item">
-                <div class="vote-header text-green"><span>綠營得票數</span><span id="info-green-votes">0</span></div>
-                <div class="bar-bg">
-                    <div class="bar-fill bg-green" id="info-green-bar" style="width: 0%"></div>
+
+            <!-- ================= 上半部：照片對決與勝負狀態 ================= -->
+            <div class="vs-section">
+                <!-- 綠營照片區 -->
+                <div class="photo-container">
+                    <img id="photo-green" class="candidate-photo" src="puma.jpg" alt="綠營候選人">
+                </div>
+
+                <!-- 中間勝負文字 -->
+                <div class="vs-center">
+                    <div id="vs-result-text" class="vs-result-text">-</div>
+                    <div id="info-status" class="info-status bg-gray">等待選擇...</div>
+                </div>
+
+                <!-- 藍營照片區 -->
+                <div class="photo-container">
+                    <img id="photo-blue" class="candidate-photo" src="wanan.jpg" alt="藍營候選人">
                 </div>
             </div>
-            <div class="vote-item">
-                <div class="vote-header text-blue"><span>藍營得票數</span><span id="info-blue-votes">0</span></div>
-                <div class="bar-bg">
-                    <div class="bar-fill bg-blue" id="info-blue-bar" style="width: 0%"></div>
+
+            <!-- ================= 下半部：自動輪播長條圖 ================= -->
+            <div class="carousel-section">
+                <div class="carousel-header">
+                    <div class="carousel-title" id="carousel-title">等待資料...</div>
                 </div>
-            </div>
-            <!-- 得票率變化：真實瀑布圖 (Waterfall Chart) -->
-            <div class="change-box">
-                <div style="font-weight: bold; margin-bottom: 12px; font-size: 15px; text-align: center; color: #555;">
-                    得票率變化分析</div>
 
-                <div class="waterfall-box">
-                    <!-- ================= 🟢 綠營 ================= -->
-                    <div class="wf-group text-green">
-                        <div class="wf-party-label" style="border-bottom-color: #2E7D32;">綠營</div>
-                        <!-- 頂部數據看板：只保留兩格，拿掉變化 -->
-                        <div class="wf-data-board-v2">
-                            <div class="wf-data-item"><span class="wf-data-lbl">上屆</span><span class="wf-data-val"
-                                    id="wf-g-prev-val">-</span></div>
-                            <div class="wf-data-item"><span class="wf-data-lbl">本屆</span><span class="wf-data-val"
-                                    id="wf-g-curr-val">-</span></div>
-                        </div>
-                        <!-- 底部斜線趨勢圖 (使用 SVG 才能完美畫斜線與定位文字) -->
-                        <div class="wf-trend-svg-container">
-                            <svg id="wf-g-trend-svg" viewBox="0 0 130 110">
-                                <!-- 上屆 -->
-                                <rect class="wf-v2-bar" id="wf-g-prev-bar" x="15" y="110" width="30" height="0"
-                                    fill="#999999" rx="2"></rect>
-                                <text class="wf-v2-lbl" x="30" y="105">上屆</text>
-
-                                <!-- 趨勢斜線與增減文字 (由 JS 控制) -->
-                                <line id="wf-g-line" x1="45" y1="110" x2="85" y2="110" stroke="#2E7D32" stroke-width="3"
-                                    stroke-dasharray="3,3" opacity="0"></line>
-                                <text id="wf-g-change-lbl" class="wf-v2-change-val text-green" x="65" y="110"
-                                    text-anchor="middle" opacity="0">-</text>
-
-                                <!-- 本屆 -->
-                                <rect class="wf-v2-bar" id="wf-g-curr-bar" x="85" y="110" width="30" height="0"
-                                    fill="#2E7D32" rx="2"></rect>
-                                <text class="wf-v2-lbl" x="100" y="105">本屆</text>
-
-                                <!-- 地平線 -->
-                                <line x1="5" y1="92" x2="125" y2="92" stroke="#ccc" stroke-width="1.5"></line>
-                            </svg>
-                        </div>
+                <div class="vote-item">
+                    <div class="vote-header text-green">
+                        <span id="carousel-green-label">綠營得票</span>
+                        <span id="carousel-green-votes">0</span>
                     </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill bg-green" id="carousel-green-bar" style="width: 0%"></div>
+                    </div>
+                </div>
 
-                    <!-- ================= 🔵 藍營 ================= -->
-                    <div class="wf-group text-blue">
-                        <div class="wf-party-label" style="border-bottom-color: #1565C0;">藍營</div>
-                        <!-- 頂部數據看板 -->
-                        <div class="wf-data-board-v2">
-                            <div class="wf-data-item"><span class="wf-data-lbl">上屆</span><span class="wf-data-val"
-                                    id="wf-b-prev-val">-</span></div>
-                            <div class="wf-data-item"><span class="wf-data-lbl">本屆</span><span class="wf-data-val"
-                                    id="wf-b-curr-val">-</span></div>
-                        </div>
-                        <!-- 底部斜線趨勢圖 -->
-                        <div class="wf-trend-svg-container">
-                            <svg id="wf-b-trend-svg" viewBox="0 0 130 110">
-                                <!-- 上屆 -->
-                                <rect class="wf-v2-bar" id="wf-b-prev-bar" x="15" y="110" width="30" height="0"
-                                    fill="#999999" rx="2"></rect>
-                                <text class="wf-v2-lbl" x="30" y="105">上屆</text>
+                <div class="vote-item">
+                    <div class="vote-header text-blue">
+                        <span id="carousel-blue-label">藍營得票</span>
+                        <span id="carousel-blue-votes">0</span>
+                    </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill bg-blue" id="carousel-blue-bar" style="width: 0%"></div>
+                    </div>
+                </div>
 
-                                <!-- 趨勢斜線與增減文字 (由 JS 控制) -->
-                                <line id="wf-b-line" x1="45" y1="110" x2="85" y2="110" stroke="#1565C0" stroke-width="3"
-                                    stroke-dasharray="3,3" opacity="0"></line>
-                                <text id="wf-b-change-lbl" class="wf-v2-change-val text-blue" x="65" y="110"
-                                    text-anchor="middle" opacity="0">-</text>
-
-                                <!-- 本屆 -->
-                                <rect class="wf-v2-bar" id="wf-b-curr-bar" x="85" y="110" width="30" height="0"
-                                    fill="#1565C0" rx="2"></rect>
-                                <text class="wf-v2-lbl" x="100" y="105">本屆</text>
-
-                                <!-- 地平線 -->
-                                <line x1="5" y1="92" x2="125" y2="92" stroke="#ccc" stroke-width="1.5"></line>
-                            </svg>
-                        </div>
+                <!-- 2022 第三勢力專用區塊 (預設隱藏) -->
+                <div class="vote-item" id="carousel-third-item" style="display: none;">
+                    <div class="vote-header text-cyan">
+                        <span id="carousel-third-label">第三勢力得票</span>
+                        <span id="carousel-third-votes">0</span>
+                    </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill bg-cyan" id="carousel-third-bar" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
@@ -564,6 +536,7 @@
 
         let isPinned = false;
         let pathGenerator;
+        let carouselInterval = null;
 
         // 點擊畫面其他地方時關閉搜尋建議框
         document.addEventListener('click', function (event) {
@@ -574,11 +547,11 @@
             }
         });
 
-        // 🌟 處理輸入與顯示建議的邏輯
+        // 處理輸入與顯示建議的邏輯
         function handleSearchInput() {
             let query = document.getElementById('search-input').value.trim();
             let box = document.getElementById('search-suggestions');
-            box.innerHTML = ''; // 清空先前的建議
+            box.innerHTML = '';
 
             if (!query) {
                 box.style.display = 'none';
@@ -586,7 +559,6 @@
             }
 
             let matches = new Set();
-            // 遍歷所有圖資比對字串
             globalGeoData.features.forEach(f => {
                 let town = f.properties.TOWNNAME;
                 let vill = f.properties.VILLNAME;
@@ -602,17 +574,15 @@
                 return;
             }
 
-            // 產生下拉選單選項
             box.style.display = 'block';
             matches.forEach(match => {
                 let item = document.createElement('div');
                 item.className = 'suggestion-item';
-                // 將關鍵字標示出來 (視覺優化)
                 item.innerHTML = match.replace(new RegExp(query, 'g'), `<strong>${query}</strong>`);
                 item.onclick = function () {
                     document.getElementById('search-input').value = match;
                     box.style.display = 'none';
-                    searchArea(); // 點擊直接觸發搜尋
+                    searchArea();
                 };
                 box.appendChild(item);
             });
@@ -632,48 +602,37 @@
         function updateInfoPanel(data, areaName) {
             document.getElementById('info-name').innerText = areaName;
 
+            if (carouselInterval) clearInterval(carouselInterval);
+
             // ==========================================
-            // 0. 防呆機制：如果找不到資料，清空所有面板資訊
+            // 0. 防呆機制 (無資料時)
             // ==========================================
             if (!data) {
+                document.getElementById('vs-result-text').innerText = '-';
                 document.getElementById('info-status').innerText = '無資料';
                 document.getElementById('info-status').className = 'info-status bg-gray';
 
-                // 清空票數與橫向長條圖
-                document.getElementById('info-green-votes').innerText = '0';
-                document.getElementById('info-blue-votes').innerText = '0';
-                document.getElementById('info-green-bar').style.width = '0%';
-                document.getElementById('info-blue-bar').style.width = '0%';
+                // 恢復照片預設小尺寸 (無資料時也讓動畫滑順縮回)
+                document.getElementById('photo-green').style.width = '70px';
+                document.getElementById('photo-green').style.height = '70px';
+                document.getElementById('photo-blue').style.width = '70px';
+                document.getElementById('photo-blue').style.height = '70px';
 
-                // 🌟 關鍵修正：清空 SVG 雙柱體 (移除 style，改用 setAttribute)
-                let barIds = ['g-prev', 'g-curr', 'b-prev', 'b-curr'];
-                barIds.forEach(id => {
-                    let valEl = document.getElementById(`wf-${id}-val`);
-                    let barEl = document.getElementById(`wf-${id}-bar`);
-                    if (valEl) valEl.innerText = '-';
-                    if (barEl) {
-                        barEl.style.height = null; // 解除 CSS 封印
-                        barEl.setAttribute('height', 0);
-                        barEl.setAttribute('y', 110);
-                    }
-                });
+                document.getElementById('carousel-title').innerText = '等待資料...';
+                document.getElementById('carousel-green-votes').innerText = '0';
+                document.getElementById('carousel-blue-votes').innerText = '0';
+                document.getElementById('carousel-third-votes').innerText = '0';
+                document.getElementById('carousel-green-bar').style.width = '0%';
+                document.getElementById('carousel-blue-bar').style.width = '0%';
+                document.getElementById('carousel-third-bar').style.width = '0%';
 
-                // 清空趨勢斜線與增減文字
-                ['g', 'b'].forEach(party => {
-                    let lineEl = document.getElementById(`wf-${party}-line`);
-                    let lblEl = document.getElementById(`wf-${party}-change-lbl`);
-                    if (lineEl) lineEl.style.opacity = 0;
-                    if (lblEl) {
-                        lblEl.style.opacity = 0;
-                        lblEl.textContent = '-';
-                    }
-                });
-
+                document.getElementById('carousel-green-label').innerText = '綠營得票';
+                document.getElementById('carousel-blue-label').innerText = '藍營得票';
                 return;
             }
 
             // ==========================================
-            // 1. 狀態標籤更新
+            // 1. 上半部：狀態標籤與勝負計算
             // ==========================================
             let status = data['狀態標籤'] ? data['狀態標籤'].trim() : '';
             let statusEl = document.getElementById('info-status');
@@ -682,94 +641,118 @@
             else if (status.includes('藍')) statusEl.className = 'info-status bg-blue';
             else statusEl.className = 'info-status bg-gray';
 
+            // 🌟 更彈性的抓取本屆票數邏輯
+            let gVotesCurrStr = (data['民進黨＿沈伯洋＿得票'] || data['綠營得票數'] || data['民進黨得票數'] || '0').toString();
+            let bVotesCurrStr = (data['國民黨＿蔣萬安＿得票'] || data['藍營得票數'] || data['國民黨得票數'] || '0').toString();
+
+            let gVotesCurr = parseInt(gVotesCurrStr.replace(/[, ]/g, '')) || 0;
+            let bVotesCurr = parseInt(bVotesCurrStr.replace(/[, ]/g, '')) || 0;
+            let diff = Math.abs(gVotesCurr - bVotesCurr);
+
+            let resultEl = document.getElementById('vs-result-text');
+            if (gVotesCurr > bVotesCurr) {
+                resultEl.innerHTML = `沈伯洋贏<br><span class="text-green">${diff.toLocaleString()}</span> 票`;
+            } else if (bVotesCurr > gVotesCurr) {
+                resultEl.innerHTML = `蔣萬安贏<br><span class="text-blue">${diff.toLocaleString()}</span> 票`;
+            } else {
+                resultEl.innerText = '雙方平手';
+            }
+
             // ==========================================
-            // 2. 得票數橫向長條圖更新
+            // 2. 上半部：根據得票數動態調整照片大小
             // ==========================================
-            // 這裡相容「綠營得票數」或「民進黨得票數」的欄位命名
-            let gVotes = parseInt(data['綠營得票數'] || data['民進黨＿沈伯洋＿得票']) || 0;
-            let bVotes = parseInt(data['藍營得票數'] || data['國民黨＿蔣萬安＿得票']) || 0;
-            let maxVotes = Math.max(gVotes, bVotes, 1);
+            let totalVotes = gVotesCurr + bVotesCurr;
+            let baseSize = 85;
+            let gSize = baseSize;
+            let bSize = baseSize;
 
-            document.getElementById('info-green-votes').innerText = gVotes.toLocaleString();
-            document.getElementById('info-blue-votes').innerText = bVotes.toLocaleString();
-            document.getElementById('info-green-bar').style.width = (gVotes / maxVotes * 100) + '%';
-            document.getElementById('info-blue-bar').style.width = (bVotes / maxVotes * 100) + '%';
+            if (totalVotes > 0) {
+                let gPct = (gVotesCurr / totalVotes) * 100;
+                let bPct = (bVotesCurr / totalVotes) * 100;
+                let diffPct = Math.abs(gPct - bPct);
+                let scaleMultiplier = 1.5;
 
+                if (gVotesCurr > bVotesCurr) {
+                    gSize = baseSize + (diffPct * scaleMultiplier);
+                } else if (bVotesCurr > gVotesCurr) {
+                    bSize = baseSize + (diffPct * scaleMultiplier);
+                }
+            }
 
-            // --- 趨勢斜線圖更新邏輯 (Trend Line Waterfall) ---
+            // 尺寸限制防破版
+            gSize = Math.max(70, Math.min(gSize, 130));
+            bSize = Math.max(70, Math.min(bSize, 130));
 
-            let gPrev = parseFloat((data['2022民進黨得票率'] || '0').toString().replace(/[%+]/g, '')) || 0;
-            let bPrev = parseFloat((data['2022國民黨得票率'] || '0').toString().replace(/[%+]/g, '')) || 0;
-            let gChange = parseFloat((data['民進黨得票差'] || '0').toString().replace(/[%+]/g, '')) || 0;
-            let bChange = parseFloat((data['國民黨得票差'] || '0').toString().replace(/[%+]/g, '')) || 0;
+            let photoGreen = document.getElementById('photo-green');
+            let photoBlue = document.getElementById('photo-blue');
 
-            let gCurr = gPrev + gChange;
-            let bCurr = bPrev + bChange;
+            photoGreen.style.width = gSize + 'px';
+            photoGreen.style.height = gSize + 'px';
+            photoBlue.style.width = bSize + 'px';
+            photoBlue.style.height = bSize + 'px';
 
-            // 計算 Y 軸比例尺：以基準線 92px 為 0，可用最大高度 75px
-            let maxVal = Math.max(gPrev, gCurr, bPrev, bCurr, 50);
-            let scale = 75 / (maxVal * 1.05);
+            // ==========================================
+            // 3. 下半部：輪播長條圖邏輯 (絕對比例尺版)
+            // ==========================================
+            let gPrevStr = (data['2022民進黨得票數'] || data['2022民進黨得票'] || '0').toString();
+            let bPrevStr = (data['2022國民黨得票數'] || data['2022國民黨得票'] || '0').toString();
 
-            // === 🟢 綠營趨勢斜線 ===
-            document.getElementById('wf-g-prev-val').innerText = Number(gPrev.toFixed(2)) + '%';
-            document.getElementById('wf-g-curr-val').innerText = Number(gCurr.toFixed(2)) + '%';
+            // 自動掃描第三勢力欄位
+            let tPrevStr = '0';
+            for (let key in data) {
+                if (key.includes('黃珊珊') || key.includes('民眾黨') || key.includes('無黨籍') || key.includes('第三')) {
+                    tPrevStr = data[key] ? data[key].toString() : '0';
+                    break;
+                }
+            }
 
-            let gPrevH = gPrev * scale;
-            let gPrevY = 92 - gPrevH;
-            let gPrevBar = document.getElementById('wf-g-prev-bar');
-            gPrevBar.setAttribute('height', gPrevH);
-            gPrevBar.setAttribute('y', gPrevY);
+            let gVotesPrev = parseInt(gPrevStr.replace(/[, ]/g, '')) || 0;
+            let bVotesPrev = parseInt(bPrevStr.replace(/[, ]/g, '')) || 0;
+            let tVotesPrev = parseInt(tPrevStr.replace(/[, ]/g, '')) || 0;
 
-            let gCurrH = gCurr * scale;
-            let gCurrY = 92 - gCurrH;
-            let gCurrBar = document.getElementById('wf-g-curr-bar');
-            gCurrBar.setAttribute('height', gCurrH);
-            gCurrBar.setAttribute('y', gCurrY);
+            // 唯一比例尺基準點
+            let globalMaxVotes = Math.max(gVotesCurr, bVotesCurr, gVotesPrev, bVotesPrev, tVotesPrev, 1);
 
-            // 連線：從上屆頂端 X=45 到本屆頂端 X=85 (左上角)
-            let gLine = document.getElementById('wf-g-line');
-            gLine.setAttribute('x1', 45);
-            gLine.setAttribute('y1', gPrevY);
-            gLine.setAttribute('x2', 85);
-            gLine.setAttribute('y2', gCurrY);
-            gLine.style.opacity = 1;
+            let is2026 = true;
 
-            // 變化標籤：定位在連線正中央上方
-            let gLabel = document.getElementById('wf-g-change-lbl');
-            gLabel.textContent = (gChange > 0 ? '+' : '') + Number(gChange.toFixed(2)) + '%';
-            gLabel.setAttribute('y', Math.min(gPrevY, gCurrY) - 8); // 🌟 數字加大，往上推一點避免撞線
-            gLabel.style.opacity = 1;
+            function renderCarousel() {
+                if (is2026) {
+                    // === 2026 年 ===
+                    document.getElementById('carousel-title').innerText = "2026年 本屆得票數";
+                    document.getElementById('carousel-green-label').innerText = "沈伯洋得票";
+                    document.getElementById('carousel-blue-label').innerText = "蔣萬安得票";
 
-            // === 🔵 藍營趨勢斜線 ===
-            document.getElementById('wf-b-prev-val').innerText = Number(bPrev.toFixed(2)) + '%';
-            document.getElementById('wf-b-curr-val').innerText = Number(bCurr.toFixed(2)) + '%';
+                    document.getElementById('carousel-third-item').style.display = 'none';
 
-            let bPrevH = bPrev * scale;
-            let bPrevY = 92 - bPrevH;
-            let bPrevBar = document.getElementById('wf-b-prev-bar');
-            bPrevBar.setAttribute('height', bPrevH);
-            bPrevBar.setAttribute('y', bPrevY);
+                    document.getElementById('carousel-green-votes').innerText = gVotesCurr.toLocaleString();
+                    document.getElementById('carousel-blue-votes').innerText = bVotesCurr.toLocaleString();
 
-            let bCurrH = bCurr * scale;
-            let bCurrY = 92 - bCurrH;
-            let bCurrBar = document.getElementById('wf-b-curr-bar');
-            bCurrBar.setAttribute('height', bCurrH);
-            bCurrBar.setAttribute('y', bCurrY);
+                    document.getElementById('carousel-green-bar').style.width = (gVotesCurr / globalMaxVotes * 100) + '%';
+                    document.getElementById('carousel-blue-bar').style.width = (bVotesCurr / globalMaxVotes * 100) + '%';
+                } else {
+                    // === 2022 年 ===
+                    document.getElementById('carousel-title').innerText = "2022年 上屆得票數";
+                    document.getElementById('carousel-green-label').innerText = "陳時中得票";
+                    document.getElementById('carousel-blue-label').innerText = "蔣萬安得票";
+                    document.getElementById('carousel-third-label').innerText = "黃珊珊得票";
 
-            // 連線
-            let bLine = document.getElementById('wf-b-line');
-            bLine.setAttribute('x1', 45);
-            bLine.setAttribute('y1', bPrevY);
-            bLine.setAttribute('x2', 85);
-            bLine.setAttribute('y2', bCurrY);
-            bLine.style.opacity = 1;
+                    document.getElementById('carousel-third-item').style.display = 'block';
 
-            // 變化標籤
-            let bLabel = document.getElementById('wf-b-change-lbl');
-            bLabel.textContent = (bChange > 0 ? '+' : '') + Number(bChange.toFixed(2)) + '%';
-            bLabel.setAttribute('y', Math.min(bPrevY, bCurrY) - 8); // 🌟 同樣往上推一點
-            bLabel.style.opacity = 1;
+                    document.getElementById('carousel-green-votes').innerText = gVotesPrev.toLocaleString();
+                    document.getElementById('carousel-blue-votes').innerText = bVotesPrev.toLocaleString();
+                    document.getElementById('carousel-third-votes').innerText = tVotesPrev.toLocaleString();
+
+                    document.getElementById('carousel-green-bar').style.width = (gVotesPrev / globalMaxVotes * 100) + '%';
+                    document.getElementById('carousel-blue-bar').style.width = (bVotesPrev / globalMaxVotes * 100) + '%';
+                    document.getElementById('carousel-third-bar').style.width = (tVotesPrev / globalMaxVotes * 100) + '%';
+                }
+                is2026 = !is2026;
+            }
+
+            renderCarousel();
+            carouselInterval = setInterval(renderCarousel, 3500);
         }
+
         function resetMap() {
             isPinned = false;
             document.getElementById('btn-reset').style.display = 'none';
@@ -786,7 +769,7 @@
         function pinAndZoom(d) {
             isPinned = true;
             document.getElementById('btn-reset').style.display = 'block';
-            document.getElementById('search-suggestions').style.display = 'none'; // 鎖定時隱藏建議框
+            document.getElementById('search-suggestions').style.display = 'none';
 
             let currentTown = d.properties.TOWNNAME;
             d3.selectAll(".district").classed("fade", true).classed("hover-active", false);
@@ -894,7 +877,7 @@
                     if (isPinned) return;
                     d3.selectAll(".district").classed("fade", false).classed("hover-active", false);
                     let totalData = globalSheetData.find(row => row['行政區'] === '全市');
-                    updateInfoPanel(totalData, '台北市全市總計');
+                    updateInfoPanel(totalData, '台北市全市');
                 })
                 .on("click", function (event, d) {
                     pinAndZoom(d);
@@ -924,10 +907,7 @@
         }
 
         init();
-
-
     </script>
-
 </body>
 
 </html>
