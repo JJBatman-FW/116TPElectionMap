@@ -242,18 +242,69 @@
             box-sizing: border-box;
         }
 
+        .info-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            /* 讓所有元素底部對齊底線 */
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+            min-height: 110px;
+            /* 預留一點照片的高度空間 */
+            position: relative;
+        }
+
+        .info-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            /* 標題與標籤的間距 */
+            margin-bottom: 5px;
+            /* 讓字體稍微離開底線 */
+        }
+
         .info-name {
-            width: 100%;
-            /* 🌟 確保標題區塊撐滿整個卡片寬度 */
             font-size: 28px;
             font-weight: bold;
             color: #222;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
             margin: 0;
-            text-align: left !important;
-            /* 🌟 強制文字靠左對齊 */
-            box-sizing: border-box;
+        }
+
+        .info-right {
+            display: flex;
+            align-items: flex-end;
+            gap: 40px;
+            /* 🌟 關鍵：將原本的 15px 改為 40px，大幅拉開文字與照片的距離 */
+        }
+
+        .vs-result-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-align: right;
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+
+        /* 勝者照片專屬容器 */
+        .winner-photo-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .candidate-photo {
+            max-width: 160px;
+            height: 150px !important;
+            /* 🌟 關鍵：給定一個固定的高度 (例如 150px)，不再隨得票率改變 */
+            object-fit: contain;
+            position: absolute;
+            bottom: 0;
+            /* 🌟 移除了放大縮小的 transition 動畫 */
         }
 
         .info-status {
@@ -320,38 +371,7 @@
         }
 
         /* ================= 新版右側面板 (照片對決+輪播) 樣式 ================= */
-        .vs-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            min-height: 160px;
-        }
 
-        /* 照片容器與動畫設定 */
-        .photo-container {
-            width: 130px;
-            height: 130px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 容器放大，讓贏家有空間膨脹 */
-        .candidate-photo {
-            width: 70px;
-            /* 🌟 新增：給定初始寬度，防止載入時破圖 */
-            height: 70px;
-            /* 🌟 新增：給定初始高度 */
-
-            border-radius: 50%;
-            object-fit: cover;
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            border: 3px solid #fff;
-        }
 
         #photo-green {
             border-color: #2E7D32;
@@ -465,24 +485,21 @@
 
         <!-- 🌟 下方：資訊面板區 -->
         <div class="info-section">
-            <h2 class="info-name" id="info-name">請在地圖上選擇區域</h2>
-
-            <!-- ================= 上半部：照片對決與勝負狀態 ================= -->
-            <div class="vs-section">
-                <!-- 綠營照片區 -->
-                <div class="photo-container">
-                    <img id="photo-green" class="candidate-photo" src="puma.jpg" alt="綠營候選人">
-                </div>
-
-                <!-- 中間勝負文字 -->
-                <div class="vs-center">
-                    <div id="vs-result-text" class="vs-result-text">-</div>
+            <div class="info-header-row">
+                <!-- 左側：地區名稱與標籤 -->
+                <div class="info-left">
+                    <h2 class="info-name" id="info-name">請在地圖上選擇區域</h2>
                     <div id="info-status" class="info-status bg-gray">等待選擇...</div>
                 </div>
 
-                <!-- 藍營照片區 -->
-                <div class="photo-container">
-                    <img id="photo-blue" class="candidate-photo" src="wanan.jpg" alt="藍營候選人">
+                <!-- 右側：勝負票數與勝者頭像 -->
+                <div class="info-right">
+                    <div id="vs-result-text" class="vs-result-text">-</div>
+                    <!-- 勝者照片區 (預設隱藏，由 JS 動態顯示贏家) -->
+                    <div class="winner-photo-container">
+                        <img id="photo-green" class="candidate-photo" src="puma.png" alt="沈伯洋" style="display: none;">
+                        <img id="photo-blue" class="candidate-photo" src="wanan.png" alt="蔣萬安" style="display: none;">
+                    </div>
                 </div>
             </div>
 
@@ -612,11 +629,9 @@
                 document.getElementById('info-status').innerText = '無資料';
                 document.getElementById('info-status').className = 'info-status bg-gray';
 
-                // 恢復照片預設小尺寸 (無資料時也讓動畫滑順縮回)
-                document.getElementById('photo-green').style.width = '70px';
-                document.getElementById('photo-green').style.height = '70px';
-                document.getElementById('photo-blue').style.width = '70px';
-                document.getElementById('photo-blue').style.height = '70px';
+                // 隱藏照片
+                document.getElementById('photo-green').style.display = 'none';
+                document.getElementById('photo-blue').style.display = 'none';
 
                 document.getElementById('carousel-title').innerText = '等待資料...';
                 document.getElementById('carousel-green-votes').innerText = '0';
@@ -632,7 +647,7 @@
             }
 
             // ==========================================
-            // 1. 上半部：狀態標籤與勝負計算
+            // 1. 標籤與得票數計算
             // ==========================================
             let status = data['狀態標籤'] ? data['狀態標籤'].trim() : '';
             let statusEl = document.getElementById('info-status');
@@ -641,56 +656,55 @@
             else if (status.includes('藍')) statusEl.className = 'info-status bg-blue';
             else statusEl.className = 'info-status bg-gray';
 
-            // 🌟 更彈性的抓取本屆票數邏輯
             let gVotesCurrStr = (data['民進黨＿沈伯洋＿得票'] || data['綠營得票數'] || data['民進黨得票數'] || '0').toString();
             let bVotesCurrStr = (data['國民黨＿蔣萬安＿得票'] || data['藍營得票數'] || data['國民黨得票數'] || '0').toString();
 
             let gVotesCurr = parseInt(gVotesCurrStr.replace(/[, ]/g, '')) || 0;
             let bVotesCurr = parseInt(bVotesCurrStr.replace(/[, ]/g, '')) || 0;
+            let totalVotes = gVotesCurr + bVotesCurr;
             let diff = Math.abs(gVotesCurr - bVotesCurr);
 
+            // 計算贏的百分比差距 (小數點後 1 位)
+            let diffPct = totalVotes > 0 ? ((diff / totalVotes) * 100).toFixed(1) : 0;
+
             let resultEl = document.getElementById('vs-result-text');
-            if (gVotesCurr > bVotesCurr) {
-                resultEl.innerHTML = `沈伯洋贏<br><span class="text-green">${diff.toLocaleString()}</span> 票`;
-            } else if (bVotesCurr > gVotesCurr) {
-                resultEl.innerHTML = `蔣萬安贏<br><span class="text-blue">${diff.toLocaleString()}</span> 票`;
-            } else {
-                resultEl.innerText = '雙方平手';
-            }
-
-            // ==========================================
-            // 2. 上半部：根據得票數動態調整照片大小
-            // ==========================================
-            let totalVotes = gVotesCurr + bVotesCurr;
-            let baseSize = 85;
-            let gSize = baseSize;
-            let bSize = baseSize;
-
-            if (totalVotes > 0) {
-                let gPct = (gVotesCurr / totalVotes) * 100;
-                let bPct = (bVotesCurr / totalVotes) * 100;
-                let diffPct = Math.abs(gPct - bPct);
-                let scaleMultiplier = 1.5;
-
-                if (gVotesCurr > bVotesCurr) {
-                    gSize = baseSize + (diffPct * scaleMultiplier);
-                } else if (bVotesCurr > gVotesCurr) {
-                    bSize = baseSize + (diffPct * scaleMultiplier);
-                }
-            }
-
-            // 尺寸限制防破版
-            gSize = Math.max(70, Math.min(gSize, 130));
-            bSize = Math.max(70, Math.min(bSize, 130));
-
             let photoGreen = document.getElementById('photo-green');
             let photoBlue = document.getElementById('photo-blue');
 
-            photoGreen.style.width = gSize + 'px';
-            photoGreen.style.height = gSize + 'px';
-            photoBlue.style.width = bSize + 'px';
-            photoBlue.style.height = bSize + 'px';
+            // 判斷勝敗，顯示對應圖片並修改文字
+            if (gVotesCurr > bVotesCurr) {
+                resultEl.innerHTML = `沈伯洋贏<br>${diff.toLocaleString()} 票 <span style="font-size:15px;">(${diffPct}%)</span>`;
+                photoGreen.style.display = 'block';
+                photoBlue.style.display = 'none';
+            } else if (bVotesCurr > gVotesCurr) {
+                resultEl.innerHTML = `蔣萬安贏<br>${diff.toLocaleString()} 票 <span style="font-size:15px;">(${diffPct}%)</span>`;
+                photoGreen.style.display = 'none';
+                photoBlue.style.display = 'block';
+            } else {
+                resultEl.innerText = '雙方平手';
+                photoGreen.style.display = 'none';
+                photoBlue.style.display = 'none';
+            }
 
+            // ==========================================
+            // 2. 根據勝敗幅度微調贏家照片高度
+            // ==========================================
+            let baseSize = 130; // 預設身高
+            let targetSize = baseSize;
+
+            if (totalVotes > 0) {
+                let scaleMultiplier = 2.0; // 差距越大，人長得越高
+                targetSize = baseSize + (diffPct * scaleMultiplier);
+            }
+
+            // 限制極端值，避免破版
+            targetSize = Math.max(100, Math.min(targetSize, 200));
+
+            if (gVotesCurr > bVotesCurr) {
+                photoGreen.style.height = targetSize + 'px';
+            } else if (bVotesCurr > gVotesCurr) {
+                photoBlue.style.height = targetSize + 'px';
+            }
             // ==========================================
             // 3. 下半部：輪播長條圖邏輯 (絕對比例尺版)
             // ==========================================
