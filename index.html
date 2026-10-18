@@ -17,45 +17,51 @@
             align-items: center;
         }
 
-        .main-title {
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        /* 🌟 核心版面修改：全面改為上下垂直排版 */
-        /* 1. 將 dashboard 升級為一張「無縫大卡片」 */
+        /* 🌟 1. 將 dashboard 升級為一張「無縫大卡片」，包含標題 */
         .dashboard {
             width: 100%;
             max-width: 900px;
             display: flex;
             flex-direction: column;
             gap: 0;
-            /* 🌟 移除間距，讓上下貼合 */
-            background: white;
-            /* 🌟 統一大背景 */
-            border-radius: 12px;
-            /* 🌟 統一大圓角 */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            /* 🌟 統一外圍陰影 */
-            overflow: hidden;
-            /* 確保內層不會超出圓角 */
+            background: white; /* 🌟 統一大背景 */
+            border-radius: 12px; /* 🌟 統一大圓角 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 🌟 統一外圍陰影 */
+            overflow: hidden; /* 確保內層不會超出圓角 */
         }
 
-        /* 2. 移除地圖區原本的圓角與陰影，並加上底部邊線作區隔 */
+        /* 🌟 2. 標題區塊樣式調整：加粗、置中，加上底線區隔 */
+        .title-section {
+            padding: 25px 25px 15px 25px; /* 上右下左 */
+            border-bottom: 2px solid #f4f6f8; /* 🌟 標題與下方地圖的分隔線 */
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 32px;
+            font-weight: 900; /* 🌟 標題加粗 */
+            color: #333;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        .sub-title {
+            font-size: 15px;
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* 3. 移除地圖區原本的圓角與陰影，並加上底部邊線作區隔 */
         .map-section {
             width: 100%;
             height: 50vh;
             min-height: 450px;
             background: white;
             padding: 20px;
-            /* 🌟 取消獨立的陰影與圓角 */
             border-radius: 0;
             box-shadow: none;
-            border-bottom: 2px solid #f4f6f8;
-            /* 🌟 兩塊合併後，加上一條淡淡的分隔線增加層次感 */
+            border-bottom: 2px solid #f4f6f8; /* 🌟 地圖與下方資訊面板的分隔線 */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -63,12 +69,11 @@
             box-sizing: border-box;
         }
 
-        /* 3. 移除資訊面板原本的圓角與陰影 */
+        /* 4. 移除資訊面板原本的圓角與陰影 */
         .info-section {
             width: 100%;
             background: white;
             padding: 25px;
-            /* 🌟 取消獨立的陰影與圓角 */
             border-radius: 0;
             box-shadow: none;
             display: flex;
@@ -77,16 +82,14 @@
             box-sizing: border-box;
         }
 
-        /* 4. 標題置左 */
+        /* 以下保留原本的樣式設定... (搜尋框、按鈕、長條圖、地圖等) */
+        
         .info-name {
             font-size: 28px;
             font-weight: bold;
             color: #222;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
             margin: 0;
             text-align: left;
-            /* 🌟 關鍵：置中改為置左 */
         }
 
         .header-controls {
@@ -128,7 +131,6 @@
             color: white;
         }
 
-        /* 搜尋框與下拉選單樣式 */
         .search-wrapper {
             position: relative;
             display: inline-block;
@@ -196,9 +198,7 @@
         #map-container {
             width: 100%;
             flex: 1;
-            /* 🌟 關鍵：讓地圖自動填滿「扣除按鈕後」的剩餘高度 */
             min-height: 0;
-            /* 確保不會把外層容器撐破 */
             text-align: center;
             display: flex;
             align-items: center;
@@ -209,7 +209,6 @@
             width: 100%;
             height: 100%;
             max-height: 100%;
-            /* 確保地圖嚴格限制在容器範圍內 */
             background-color: transparent;
         }
 
@@ -229,29 +228,14 @@
             stroke-width: 1.5px !important;
         }
 
-        /* 🌟 下方資訊面板 */
-        .info-section {
-            width: 100%;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-sizing: border-box;
-        }
-
         .info-header-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            /* 讓所有元素底部對齊底線 */
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
             margin-bottom: 20px;
             min-height: 110px;
-            /* 預留一點照片的高度空間 */
             position: relative;
         }
 
@@ -259,23 +243,13 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            /* 標題與標籤的間距 */
             margin-bottom: 5px;
-            /* 讓字體稍微離開底線 */
-        }
-
-        .info-name {
-            font-size: 28px;
-            font-weight: bold;
-            color: #222;
-            margin: 0;
         }
 
         .info-right {
             display: flex;
             align-items: flex-end;
             gap: 40px;
-            /* 🌟 關鍵：將原本的 15px 改為 40px，大幅拉開文字與照片的距離 */
         }
 
         .vs-result-text {
@@ -287,7 +261,6 @@
             margin-bottom: 5px;
         }
 
-        /* 勝者照片專屬容器 */
         .winner-photo-container {
             position: relative;
             width: 100px;
@@ -300,11 +273,9 @@
         .candidate-photo {
             max-width: 160px;
             height: 150px !important;
-            /* 🌟 關鍵：給定一個固定的高度 (例如 150px)，不再隨得票率改變 */
             object-fit: contain;
             position: absolute;
             bottom: 0;
-            /* 🌟 移除了放大縮小的 transition 動畫 */
         }
 
         .info-status {
@@ -317,33 +288,13 @@
             width: fit-content;
         }
 
-        .bg-green {
-            background-color: #2E7D32;
-        }
-
-        .bg-blue {
-            background-color: #1565C0;
-        }
-
-        .bg-gray {
-            background-color: #999;
-        }
-
-        .text-green {
-            color: #2E7D32;
-        }
-
-        .text-blue {
-            color: #1565C0;
-        }
-
-        .bg-cyan {
-            background-color: #00BCD4;
-        }
-
-        .text-cyan {
-            color: #0097A7;
-        }
+        .bg-green { background-color: #2E7D32; }
+        .bg-blue { background-color: #1565C0; }
+        .bg-gray { background-color: #999; }
+        .text-green { color: #2E7D32; }
+        .text-blue { color: #1565C0; }
+        .bg-cyan { background-color: #00BCD4; }
+        .text-cyan { color: #0097A7; }
 
         .vote-item {
             margin-bottom: 15px;
@@ -370,35 +321,6 @@
             transition: width 0.6s ease-out;
         }
 
-        /* ================= 新版右側面板 (照片對決+輪播) 樣式 ================= */
-
-
-        #photo-green {
-            border-color: #2E7D32;
-        }
-
-        #photo-blue {
-            border-color: #1565C0;
-        }
-
-        .vs-center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            padding: 0 10px;
-        }
-
-        .vs-result-text {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            text-align: center;
-            line-height: 1.5;
-        }
-
-        /* 輪播區塊樣式 */
         .carousel-section {
             background: #f8f9fa;
             padding: 20px;
@@ -415,25 +337,21 @@
             transition: color 0.3s;
         }
 
-        /* ================= RWD 響應式設計 (800px 以下) ================= */
         @media (max-width: 800px) {
             .header-controls {
                 flex-direction: column;
                 gap: 15px;
             }
-
             .left-controls,
             .right-controls {
                 width: 100%;
                 justify-content: center;
                 flex-wrap: wrap;
             }
-
             .search-wrapper {
                 flex: 1;
                 min-width: 200px;
             }
-
             #search-input {
                 width: 100%;
                 box-sizing: border-box;
@@ -444,9 +362,13 @@
 
 <body>
 
-    <h1 class="main-title">116年九合一大選台北市結果</h1>
-
     <div class="dashboard">
+        <!-- 🌟 新增：包含在大白卡片內的標題區塊 -->
+        <div class="title-section">
+            <h1 class="main-title">116年九合一大選台北市結果</h1>
+            <p class="sub-title">比較2022年、2026年兩屆選舉結果，板塊顏色為該里得票最高的侯選人黨籍顏色，<br>若本屆得票最高者與上一屆不同，則視為「翻盤」；相同則視為「守住」。</p>
+        </div>
+
         <!-- 🌟 上方：地圖區 -->
         <div class="map-section">
             <div class="header-controls">
@@ -555,7 +477,6 @@
         let pathGenerator;
         let carouselInterval = null;
 
-        // 點擊畫面其他地方時關閉搜尋建議框
         document.addEventListener('click', function (event) {
             let wrapper = document.querySelector('.search-wrapper');
             let box = document.getElementById('search-suggestions');
@@ -564,7 +485,6 @@
             }
         });
 
-        // 處理輸入與顯示建議的邏輯
         function handleSearchInput() {
             let query = document.getElementById('search-input').value.trim();
             let box = document.getElementById('search-suggestions');
@@ -621,15 +541,11 @@
 
             if (carouselInterval) clearInterval(carouselInterval);
 
-            // ==========================================
-            // 0. 防呆機制 (無資料時)
-            // ==========================================
             if (!data) {
                 document.getElementById('vs-result-text').innerText = '-';
                 document.getElementById('info-status').innerText = '無資料';
                 document.getElementById('info-status').className = 'info-status bg-gray';
 
-                // 隱藏照片
                 document.getElementById('photo-green').style.display = 'none';
                 document.getElementById('photo-blue').style.display = 'none';
 
@@ -646,9 +562,6 @@
                 return;
             }
 
-            // ==========================================
-            // 1. 標籤與得票數計算
-            // ==========================================
             let status = data['狀態標籤'] ? data['狀態標籤'].trim() : '';
             let statusEl = document.getElementById('info-status');
             statusEl.innerText = status || '無標籤';
@@ -664,14 +577,12 @@
             let totalVotes = gVotesCurr + bVotesCurr;
             let diff = Math.abs(gVotesCurr - bVotesCurr);
 
-            // 計算贏的百分比差距 (小數點後 1 位)
             let diffPct = totalVotes > 0 ? ((diff / totalVotes) * 100).toFixed(1) : 0;
 
             let resultEl = document.getElementById('vs-result-text');
             let photoGreen = document.getElementById('photo-green');
             let photoBlue = document.getElementById('photo-blue');
 
-            // 判斷勝敗，顯示對應圖片並修改文字
             if (gVotesCurr > bVotesCurr) {
                 resultEl.innerHTML = `沈伯洋贏<br>${diff.toLocaleString()} 票 <span style="font-size:15px;">(${diffPct}%)</span>`;
                 photoGreen.style.display = 'block';
@@ -686,18 +597,14 @@
                 photoBlue.style.display = 'none';
             }
 
-            // ==========================================
-            // 2. 根據勝敗幅度微調贏家照片高度
-            // ==========================================
-            let baseSize = 130; // 預設身高
+            let baseSize = 130;
             let targetSize = baseSize;
 
             if (totalVotes > 0) {
-                let scaleMultiplier = 2.0; // 差距越大，人長得越高
+                let scaleMultiplier = 2.0; 
                 targetSize = baseSize + (diffPct * scaleMultiplier);
             }
 
-            // 限制極端值，避免破版
             targetSize = Math.max(100, Math.min(targetSize, 200));
 
             if (gVotesCurr > bVotesCurr) {
@@ -705,13 +612,10 @@
             } else if (bVotesCurr > gVotesCurr) {
                 photoBlue.style.height = targetSize + 'px';
             }
-            // ==========================================
-            // 3. 下半部：輪播長條圖邏輯 (絕對比例尺版)
-            // ==========================================
+
             let gPrevStr = (data['2022民進黨得票數'] || data['2022民進黨得票'] || '0').toString();
             let bPrevStr = (data['2022國民黨得票數'] || data['2022國民黨得票'] || '0').toString();
 
-            // 自動掃描第三勢力欄位
             let tPrevStr = '0';
             for (let key in data) {
                 if (key.includes('黃珊珊') || key.includes('民眾黨') || key.includes('無黨籍') || key.includes('第三')) {
@@ -724,14 +628,12 @@
             let bVotesPrev = parseInt(bPrevStr.replace(/[, ]/g, '')) || 0;
             let tVotesPrev = parseInt(tPrevStr.replace(/[, ]/g, '')) || 0;
 
-            // 唯一比例尺基準點
             let globalMaxVotes = Math.max(gVotesCurr, bVotesCurr, gVotesPrev, bVotesPrev, tVotesPrev, 1);
 
             let is2026 = true;
 
             function renderCarousel() {
                 if (is2026) {
-                    // === 2026 年 ===
                     document.getElementById('carousel-title').innerText = "2026年 本屆得票數";
                     document.getElementById('carousel-green-label').innerText = "沈伯洋得票";
                     document.getElementById('carousel-blue-label').innerText = "蔣萬安得票";
@@ -744,7 +646,6 @@
                     document.getElementById('carousel-green-bar').style.width = (gVotesCurr / globalMaxVotes * 100) + '%';
                     document.getElementById('carousel-blue-bar').style.width = (bVotesCurr / globalMaxVotes * 100) + '%';
                 } else {
-                    // === 2022 年 ===
                     document.getElementById('carousel-title').innerText = "2022年 上屆得票數";
                     document.getElementById('carousel-green-label').innerText = "陳時中得票";
                     document.getElementById('carousel-blue-label').innerText = "蔣萬安得票";
