@@ -17,29 +17,27 @@
             align-items: center;
         }
 
-        /* 🌟 1. 將 dashboard 升級為一張「無縫大卡片」，包含標題 */
         .dashboard {
             width: 100%;
             max-width: 900px;
             display: flex;
             flex-direction: column;
             gap: 0;
-            background: white; /* 🌟 統一大背景 */
-            border-radius: 12px; /* 🌟 統一大圓角 */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 🌟 統一外圍陰影 */
-            overflow: hidden; /* 確保內層不會超出圓角 */
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+            overflow: hidden; 
         }
 
-        /* 🌟 2. 標題區塊樣式調整：加粗、置中，加上底線區隔 */
         .title-section {
-            padding: 25px 25px 15px 25px; /* 上右下左 */
-            border-bottom: 2px solid #f4f6f8; /* 🌟 標題與下方地圖的分隔線 */
+            padding: 25px 25px 15px 25px; 
+            border-bottom: 2px solid #f4f6f8; 
             text-align: center;
         }
 
         .main-title {
             font-size: 32px;
-            font-weight: 900; /* 🌟 標題加粗 */
+            font-weight: 900; 
             color: #333;
             margin: 0;
             margin-bottom: 10px;
@@ -52,7 +50,6 @@
             line-height: 1.5;
         }
 
-        /* 3. 移除地圖區原本的圓角與陰影，並加上底部邊線作區隔 */
         .map-section {
             width: 100%;
             height: 50vh;
@@ -61,7 +58,7 @@
             padding: 20px;
             border-radius: 0;
             box-shadow: none;
-            border-bottom: 2px solid #f4f6f8; /* 🌟 地圖與下方資訊面板的分隔線 */
+            border-bottom: 2px solid #f4f6f8; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -69,7 +66,6 @@
             box-sizing: border-box;
         }
 
-        /* 4. 移除資訊面板原本的圓角與陰影 */
         .info-section {
             width: 100%;
             background: white;
@@ -81,8 +77,6 @@
             gap: 20px;
             box-sizing: border-box;
         }
-
-        /* 以下保留原本的樣式設定... (搜尋框、按鈕、長條圖、地圖等) */
         
         .info-name {
             font-size: 28px;
@@ -288,9 +282,12 @@
             width: fit-content;
         }
 
+        /* 各黨派顏色定義 */
         .bg-green { background-color: #2E7D32; }
         .bg-blue { background-color: #1565C0; }
+        .bg-other { background-color: #757575; } /* 🌟 第三勢力專用色改為深灰色 */
         .bg-gray { background-color: #999; }
+        
         .text-green { color: #2E7D32; }
         .text-blue { color: #1565C0; }
         .bg-cyan { background-color: #00BCD4; }
@@ -363,13 +360,13 @@
 <body>
 
     <div class="dashboard">
-        <!-- 🌟 新增：包含在大白卡片內的標題區塊 -->
+        <!-- 標題區塊 -->
         <div class="title-section">
             <h1 class="main-title">116年九合一大選台北市結果</h1>
             <p class="sub-title">比較2022年、2026年兩屆選舉結果，板塊顏色為該里得票最高的侯選人黨籍顏色，<br>若本屆得票最高者與上一屆不同，則視為「翻盤」；相同則視為「守住」。</p>
         </div>
 
-        <!-- 🌟 上方：地圖區 -->
+        <!-- 上方：地圖區 -->
         <div class="map-section">
             <div class="header-controls">
                 <div class="left-controls">
@@ -389,15 +386,23 @@
             <div id="map-container">
                 <svg id="map-svg" viewBox="0 0 700 500" preserveAspectRatio="xMidYMid meet">
                     <defs>
+                        <!-- 綠營翻盤斜線 -->
                         <pattern id="pattern-green-flip" width="10" height="10" patternTransform="rotate(45)"
                             patternUnits="userSpaceOnUse">
                             <rect width="10" height="10" fill="#2E7D32"></rect>
                             <line x1="0" y1="0" x2="0" y2="10" stroke="#81C784" stroke-width="3"></line>
                         </pattern>
+                        <!-- 藍營翻盤斜線 -->
                         <pattern id="pattern-blue-flip" width="10" height="10" patternTransform="rotate(45)"
                             patternUnits="userSpaceOnUse">
                             <rect width="10" height="10" fill="#1565C0"></rect>
                             <line x1="0" y1="0" x2="0" y2="10" stroke="#90CAF9" stroke-width="3"></line>
+                        </pattern>
+                        <!-- 🌟 更新：第三勢力/小黨翻盤斜線改為深淺灰色 -->
+                        <pattern id="pattern-other-flip" width="10" height="10" patternTransform="rotate(45)"
+                            patternUnits="userSpaceOnUse">
+                            <rect width="10" height="10" fill="#757575"></rect>
+                            <line x1="0" y1="0" x2="0" y2="10" stroke="#BDBDBD" stroke-width="3"></line>
                         </pattern>
                     </defs>
                     <g id="map-group"></g>
@@ -405,7 +410,7 @@
             </div>
         </div>
 
-        <!-- 🌟 下方：資訊面板區 -->
+        <!-- 下方：資訊面板區 -->
         <div class="info-section">
             <div class="info-header-row">
                 <!-- 左側：地區名稱與標籤 -->
@@ -417,7 +422,6 @@
                 <!-- 右側：勝負票數與勝者頭像 -->
                 <div class="info-right">
                     <div id="vs-result-text" class="vs-result-text">-</div>
-                    <!-- 勝者照片區 (預設隱藏，由 JS 動態顯示贏家) -->
                     <div class="winner-photo-container">
                         <img id="photo-green" class="candidate-photo" src="puma.png" alt="沈伯洋" style="display: none;">
                         <img id="photo-blue" class="candidate-photo" src="wanan.png" alt="蔣萬安" style="display: none;">
@@ -425,7 +429,7 @@
                 </div>
             </div>
 
-            <!-- ================= 下半部：自動輪播長條圖 ================= -->
+            <!-- 自動輪播長條圖 -->
             <div class="carousel-section">
                 <div class="carousel-header">
                     <div class="carousel-title" id="carousel-title">等待資料...</div>
@@ -451,7 +455,7 @@
                     </div>
                 </div>
 
-                <!-- 2022 第三勢力專用區塊 (預設隱藏) -->
+                <!-- 2022 第三勢力專用區塊 -->
                 <div class="vote-item" id="carousel-third-item" style="display: none;">
                     <div class="vote-header text-cyan">
                         <span id="carousel-third-label">第三勢力得票</span>
@@ -525,15 +529,20 @@
             });
         }
 
+        // 🌟 更新：無黨籍或小黨的顏色判斷改為深灰色 (#757575)
         function getFillColor(status) {
             let cleanStatus = status ? status.trim() : '';
-            switch (cleanStatus) {
-                case '綠守住': return '#2E7D32';
-                case '藍守住': return '#1565C0';
-                case '綠翻盤': return 'url(#pattern-green-flip)';
-                case '藍翻盤': return 'url(#pattern-blue-flip)';
-                default: return '#cccccc';
-            }
+            
+            if (cleanStatus.includes('綠守住')) return '#2E7D32';
+            if (cleanStatus.includes('藍守住')) return '#1565C0';
+            if (cleanStatus.includes('綠翻盤')) return 'url(#pattern-green-flip)';
+            if (cleanStatus.includes('藍翻盤')) return 'url(#pattern-blue-flip)';
+            
+            // 只要標籤內不含藍綠，但有「守住」或「翻盤」即可觸發小黨專屬顏色(灰色)
+            if (cleanStatus.includes('守住')) return '#757575'; 
+            if (cleanStatus.includes('翻盤')) return 'url(#pattern-other-flip)';
+
+            return '#cccccc';
         }
 
         function updateInfoPanel(data, areaName) {
@@ -565,19 +574,27 @@
             let status = data['狀態標籤'] ? data['狀態標籤'].trim() : '';
             let statusEl = document.getElementById('info-status');
             statusEl.innerText = status || '無標籤';
-            if (status.includes('綠')) statusEl.className = 'info-status bg-green';
-            else if (status.includes('藍')) statusEl.className = 'info-status bg-blue';
-            else statusEl.className = 'info-status bg-gray';
+            
+            if (status.includes('綠')) {
+                statusEl.className = 'info-status bg-green';
+            } else if (status.includes('藍')) {
+                statusEl.className = 'info-status bg-blue';
+            } else if (status.includes('守住') || status.includes('翻盤')) {
+                // 套用第三勢力顏色
+                statusEl.className = 'info-status bg-other';
+            } else {
+                statusEl.className = 'info-status bg-gray';
+            }
 
             let gVotesCurrStr = (data['民進黨＿沈伯洋＿得票'] || data['綠營得票數'] || data['民進黨得票數'] || '0').toString();
             let bVotesCurrStr = (data['國民黨＿蔣萬安＿得票'] || data['藍營得票數'] || data['國民黨得票數'] || '0').toString();
 
             let gVotesCurr = parseInt(gVotesCurrStr.replace(/[, ]/g, '')) || 0;
             let bVotesCurr = parseInt(bVotesCurrStr.replace(/[, ]/g, '')) || 0;
-            let totalVotes = gVotesCurr + bVotesCurr;
+            let totalCurr = Math.max(1, gVotesCurr + bVotesCurr);
             let diff = Math.abs(gVotesCurr - bVotesCurr);
 
-            let diffPct = totalVotes > 0 ? ((diff / totalVotes) * 100).toFixed(1) : 0;
+            let diffPct = totalCurr > 0 ? ((diff / totalCurr) * 100).toFixed(1) : 0;
 
             let resultEl = document.getElementById('vs-result-text');
             let photoGreen = document.getElementById('photo-green');
@@ -600,7 +617,7 @@
             let baseSize = 130;
             let targetSize = baseSize;
 
-            if (totalVotes > 0) {
+            if (totalCurr > 0) {
                 let scaleMultiplier = 2.0; 
                 targetSize = baseSize + (diffPct * scaleMultiplier);
             }
@@ -627,6 +644,17 @@
             let gVotesPrev = parseInt(gPrevStr.replace(/[, ]/g, '')) || 0;
             let bVotesPrev = parseInt(bPrevStr.replace(/[, ]/g, '')) || 0;
             let tVotesPrev = parseInt(tPrevStr.replace(/[, ]/g, '')) || 0;
+            
+            let totalPrev = Math.max(1, gVotesPrev + bVotesPrev + tVotesPrev);
+            
+            let gPctCurr = ((gVotesCurr / totalCurr) * 100).toFixed(1);
+            let bPctCurr = ((bVotesCurr / totalCurr) * 100).toFixed(1);
+            
+            let gDiff = ((gVotesCurr / totalCurr) * 100) - ((gVotesPrev / totalPrev) * 100);
+            let bDiff = ((bVotesCurr / totalCurr) * 100) - ((bVotesPrev / totalPrev) * 100);
+            
+            let gDiffStr = (gDiff >= 0 ? '+' : '') + gDiff.toFixed(1) + '%';
+            let bDiffStr = (bDiff >= 0 ? '+' : '') + bDiff.toFixed(1) + '%';
 
             let globalMaxVotes = Math.max(gVotesCurr, bVotesCurr, gVotesPrev, bVotesPrev, tVotesPrev, 1);
 
@@ -640,8 +668,8 @@
 
                     document.getElementById('carousel-third-item').style.display = 'none';
 
-                    document.getElementById('carousel-green-votes').innerText = gVotesCurr.toLocaleString();
-                    document.getElementById('carousel-blue-votes').innerText = bVotesCurr.toLocaleString();
+                    document.getElementById('carousel-green-votes').innerText = `${gVotesCurr.toLocaleString()} (得票率 ${gPctCurr}% | 較上屆 ${gDiffStr})`;
+                    document.getElementById('carousel-blue-votes').innerText = `${bVotesCurr.toLocaleString()} (得票率 ${bPctCurr}% | 較上屆 ${bDiffStr})`;
 
                     document.getElementById('carousel-green-bar').style.width = (gVotesCurr / globalMaxVotes * 100) + '%';
                     document.getElementById('carousel-blue-bar').style.width = (bVotesCurr / globalMaxVotes * 100) + '%';
