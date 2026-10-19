@@ -23,21 +23,21 @@
             display: flex;
             flex-direction: column;
             gap: 0;
-            background: white; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
-            overflow: hidden; 
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
         }
 
         .title-section {
-            padding: 25px 25px 15px 25px; 
-            border-bottom: 2px solid #f4f6f8; 
+            padding: 25px 25px 15px 25px;
+            border-bottom: 2px solid #f4f6f8;
             text-align: center;
         }
 
         .main-title {
             font-size: 32px;
-            font-weight: 900; 
+            font-weight: 900;
             color: #333;
             margin: 0;
             margin-bottom: 10px;
@@ -58,7 +58,7 @@
             padding: 20px;
             border-radius: 0;
             box-shadow: none;
-            border-bottom: 2px solid #f4f6f8; 
+            border-bottom: 2px solid #f4f6f8;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -77,7 +77,7 @@
             gap: 20px;
             box-sizing: border-box;
         }
-        
+
         .info-name {
             font-size: 28px;
             font-weight: bold;
@@ -283,15 +283,38 @@
         }
 
         /* 各黨派顏色定義 */
-        .bg-green { background-color: #2E7D32; }
-        .bg-blue { background-color: #1565C0; }
-        .bg-other { background-color: #757575; } /* 🌟 第三勢力專用色改為深灰色 */
-        .bg-gray { background-color: #999; }
-        
-        .text-green { color: #2E7D32; }
-        .text-blue { color: #1565C0; }
-        .bg-cyan { background-color: #00BCD4; }
-        .text-cyan { color: #0097A7; }
+        .bg-green {
+            background-color: #2E7D32;
+        }
+
+        .bg-blue {
+            background-color: #1565C0;
+        }
+
+        .bg-other {
+            background-color: #757575;
+        }
+
+        /* 🌟 第三勢力專用色改為深灰色 */
+        .bg-gray {
+            background-color: #999;
+        }
+
+        .text-green {
+            color: #2E7D32;
+        }
+
+        .text-blue {
+            color: #1565C0;
+        }
+
+        .bg-cyan {
+            background-color: #00BCD4;
+        }
+
+        .text-cyan {
+            color: #0097A7;
+        }
 
         .vote-item {
             margin-bottom: 15px;
@@ -339,16 +362,19 @@
                 flex-direction: column;
                 gap: 15px;
             }
+
             .left-controls,
             .right-controls {
                 width: 100%;
                 justify-content: center;
                 flex-wrap: wrap;
             }
+
             .search-wrapper {
                 flex: 1;
                 min-width: 200px;
             }
+
             #search-input {
                 width: 100%;
                 box-sizing: border-box;
@@ -532,14 +558,14 @@
         // 🌟 更新：無黨籍或小黨的顏色判斷改為深灰色 (#757575)
         function getFillColor(status) {
             let cleanStatus = status ? status.trim() : '';
-            
+
             if (cleanStatus.includes('綠守住')) return '#2E7D32';
             if (cleanStatus.includes('藍守住')) return '#1565C0';
             if (cleanStatus.includes('綠翻盤')) return 'url(#pattern-green-flip)';
             if (cleanStatus.includes('藍翻盤')) return 'url(#pattern-blue-flip)';
-            
+
             // 只要標籤內不含藍綠，但有「守住」或「翻盤」即可觸發小黨專屬顏色(灰色)
-            if (cleanStatus.includes('守住')) return '#757575'; 
+            if (cleanStatus.includes('守住')) return '#757575';
             if (cleanStatus.includes('翻盤')) return 'url(#pattern-other-flip)';
 
             return '#cccccc';
@@ -574,7 +600,7 @@
             let status = data['狀態標籤'] ? data['狀態標籤'].trim() : '';
             let statusEl = document.getElementById('info-status');
             statusEl.innerText = status || '無標籤';
-            
+
             if (status.includes('綠')) {
                 statusEl.className = 'info-status bg-green';
             } else if (status.includes('藍')) {
@@ -591,9 +617,26 @@
 
             let gVotesCurr = parseInt(gVotesCurrStr.replace(/[, ]/g, '')) || 0;
             let bVotesCurr = parseInt(bVotesCurrStr.replace(/[, ]/g, '')) || 0;
-            let totalCurr = Math.max(1, gVotesCurr + bVotesCurr);
+
+            // 1. 優先抓取 CSV 表格中的「總投票數」或「有效票數」欄位
+            let totalVotesStr = (data['總投票數'] || data['有效票數'] || '0').toString();
+            let totalCurr = parseInt(totalVotesStr.replace(/[, ]/g, '')) || 0;
+
+            // 2. 如果您的表格沒有「總投票數」欄位，就自動掃描並加上小黨的票數作為總和
+            if (totalCurr === 0) {
+                let tVotesCurr = 0;
+                for (let key in data) {
+                    if (key.includes('第三') || key.includes('無黨籍') || key.includes('民眾黨')) {
+                        tVotesCurr = parseInt((data[key] || '0').toString().replace(/[, ]/g, '')) || 0;
+                        break;
+                    }
+                }
+                totalCurr = Math.max(1, gVotesCurr + bVotesCurr + tVotesCurr);
+            }
+
             let diff = Math.abs(gVotesCurr - bVotesCurr);
 
+            // 3. 算出正確的勝差百分比 (得票率差距)
             let diffPct = totalCurr > 0 ? ((diff / totalCurr) * 100).toFixed(1) : 0;
 
             let resultEl = document.getElementById('vs-result-text');
@@ -618,7 +661,7 @@
             let targetSize = baseSize;
 
             if (totalCurr > 0) {
-                let scaleMultiplier = 2.0; 
+                let scaleMultiplier = 2.0;
                 targetSize = baseSize + (diffPct * scaleMultiplier);
             }
 
@@ -644,15 +687,15 @@
             let gVotesPrev = parseInt(gPrevStr.replace(/[, ]/g, '')) || 0;
             let bVotesPrev = parseInt(bPrevStr.replace(/[, ]/g, '')) || 0;
             let tVotesPrev = parseInt(tPrevStr.replace(/[, ]/g, '')) || 0;
-            
+
             let totalPrev = Math.max(1, gVotesPrev + bVotesPrev + tVotesPrev);
-            
+
             let gPctCurr = ((gVotesCurr / totalCurr) * 100).toFixed(1);
             let bPctCurr = ((bVotesCurr / totalCurr) * 100).toFixed(1);
-            
+
             let gDiff = ((gVotesCurr / totalCurr) * 100) - ((gVotesPrev / totalPrev) * 100);
             let bDiff = ((bVotesCurr / totalCurr) * 100) - ((bVotesPrev / totalPrev) * 100);
-            
+
             let gDiffStr = (gDiff >= 0 ? '+' : '') + gDiff.toFixed(1) + '%';
             let bDiffStr = (bDiff >= 0 ? '+' : '') + bDiff.toFixed(1) + '%';
 
